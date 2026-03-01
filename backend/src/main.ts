@@ -17,8 +17,14 @@ async function bootstrap() {
   );
 
   // CORS
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'https://adaptable-unity-production.up.railway.app',
+    'http://localhost:3000',
+  ].filter(Boolean);
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
