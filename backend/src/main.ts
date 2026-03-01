@@ -21,7 +21,7 @@ async function bootstrap() {
     process.env.FRONTEND_URL,
     'https://adaptable-unity-production.up.railway.app',
     'http://localhost:3000',
-  ].filter(Boolean);
+  ].filter((o): o is string => Boolean(o));
 
   app.enableCors({
     origin: allowedOrigins,
