@@ -1,4 +1,4 @@
-# 📚 TechLearning - Academic Files Journey
+# TechLearning - Academic Files Journey
 
 > Plataforma web para organizar, subir y gestionar todos tus proyectos académicos en un solo lugar. PDFs, documentos, videos, fotos, código y cualquier tipo de archivo.
 
@@ -11,7 +11,7 @@
 
 ---
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
 - [Características](#-características)
 - [Tech Stack](#-tech-stack)
@@ -27,21 +27,21 @@
 
 ---
 
-## ✨ Características
+## Características
 
-- **📁 Subida de archivos** — Sube PDFs, documentos Word, videos, fotos, código, presentaciones y más (hasta 100MB por archivo, 20 archivos simultáneos)
-- **📂 Organización por proyecto** — Agrupa archivos por proyecto académico con categoría, materia, semestre y tags
-- **🔍 Búsqueda y filtrado** — Busca proyectos por nombre, materia, categoría
-- **📌 Proyectos favoritos** — Fija los proyectos más importantes
-- **📊 Dashboard** — Vista general con estadísticas de tus proyectos y archivos
-- **🔐 Autenticación** — Registro e inicio de sesión con JWT + NextAuth
-- **🛡️ Seguridad** — Helmet (headers HTTP), DOMPurify (sanitización XSS), validación de inputs
-- **📱 Responsive** — Interfaz adaptable a móvil, tablet y desktop
-- **📖 API documentada** — Swagger UI disponible en `/api/docs`
+- **Subida de archivos** — Sube PDFs, documentos Word, videos, fotos, código, presentaciones y más (hasta 100MB por archivo, 20 archivos simultáneos)
+- **Organización por proyecto** — Agrupa archivos por proyecto académico con categoría, materia, semestre y tags
+- **Búsqueda y filtrado** — Busca proyectos por nombre, materia, categoría
+- **Proyectos favoritos** — Fija los proyectos más importantes
+- **Dashboard** — Vista general con estadísticas de tus proyectos y archivos
+- **Autenticación** — Registro e inicio de sesión con JWT + NextAuth
+- **Seguridad** — Helmet (headers HTTP), DOMPurify (sanitización XSS), validación de inputs
+- **Responsive** — Interfaz adaptable a móvil, tablet y desktop
+- **API documentada** — Swagger UI disponible en `/api/docs`
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Componente | Tecnología |
 |---|---|
@@ -58,7 +58,7 @@
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```
 ┌─────────────────┐      ┌──────────────────┐      ┌──────────────┐
@@ -77,7 +77,7 @@
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 TechLearningFiles/
@@ -165,7 +165,7 @@ TechLearningFiles/
 
 ---
 
-## 🚀 Instalación Local
+## Instalación Local
 
 ### Requisitos previos
 
@@ -225,7 +225,7 @@ El frontend estará disponible en `http://localhost:3000`
 
 ---
 
-## 🔑 Variables de Entorno
+## Variables de Entorno
 
 ### Backend (`backend/.env`)
 
@@ -249,7 +249,7 @@ El frontend estará disponible en `http://localhost:3000`
 
 ---
 
-## 🗄️ Base de Datos
+## Base de Datos
 
 ### Modelos
 
@@ -301,7 +301,7 @@ npx prisma generate                        # Regenerar client
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Auth
 | Método | Ruta | Descripción |
@@ -339,7 +339,7 @@ npx prisma generate                        # Regenerar client
 
 ---
 
-## 🛡️ Seguridad
+## Seguridad
 
 ### Backend (NestJS)
 - **Helmet** — Headers HTTP de seguridad (X-Content-Type-Options, X-Frame-Options, HSTS, etc.)
@@ -363,7 +363,7 @@ npx prisma generate                        # Regenerar client
 
 ---
 
-## 🚂 Deploy en Railway
+## Deploy en Railway
 
 ### Paso 1: Crear proyecto en Railway
 
@@ -421,7 +421,7 @@ npx prisma generate                        # Regenerar client
 
 ---
 
-## 🎯 Formatos de Archivos Soportados
+## Formatos de Archivos Soportados
 
 | Tipo | Extensiones | Icono |
 |---|---|---|
@@ -438,7 +438,7 @@ npx prisma generate                        # Regenerar client
 
 ---
 
-## 🧪 Desarrollo
+## Desarrollo
 
 ```bash
 # Backend (terminal 1)
@@ -453,6 +453,6 @@ cd backend && npx prisma studio
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto es de uso personal/académico. Creado por [@WakandianShield](https://github.com/WakandianShield).
