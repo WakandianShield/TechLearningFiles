@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  avatar    String?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+
+  @@map("users")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String?
+  category    ProjectCategory @default(OTHER)
+  tags        String[]      @default([])
+  semester    String?
+  subject     String?
+  coverImage  String?
+  pinned      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  files ProjectFile[]
+
+  @@index([slug])
+  @@index([authorId])
+  @@index([category])
+  @@map("projects")
+}
+
+model ProjectFile {
+  id           String   @id @default(cuid())
+  originalName String
+  fileName     String
+  filePath     String
+  mimeType     String
+  size         Int
+  fileType     FileType @default(OTHER)
+  description  String?
+  createdAt    DateTime @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+
+  @@index([projectId])
+  @@index([fileType])
+  @@map("project_files")
+}
+
+enum ProjectCategory {
+  PROGRAMMING
+  MATH
+  SCIENCE
+  DESIGN
+  WRITING
+  RESEARCH
+  PRESENTATION
+  LAB
+  OTHER
+}
+
+enum FileType {
+  PDF
+  DOCUMENT
+  IMAGE
+  VIDEO
+  AUDIO
+  CODE
+  SPREADSHEET
+  ARCHIVE
+  OTHER
+}
