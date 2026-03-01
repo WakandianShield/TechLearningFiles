@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsEnum, IsArray, MaxLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ProjectCategory } from '@prisma/client';
 
 export class CreateProjectDto {
   @ApiProperty({ example: 'Data Structures Final Project' })
@@ -13,10 +14,10 @@ export class CreateProjectDto {
   @MaxLength(2000)
   description?: string;
 
-  @ApiPropertyOptional({ enum: ['PROGRAMMING', 'MATH', 'SCIENCE', 'DESIGN', 'WRITING', 'RESEARCH', 'PRESENTATION', 'LAB', 'OTHER'] })
+  @ApiPropertyOptional({ enum: ProjectCategory })
   @IsOptional()
-  @IsString()
-  category?: string;
+  @IsEnum(ProjectCategory)
+  category?: ProjectCategory;
 
   @ApiPropertyOptional({ example: ['algorithms', 'java'] })
   @IsOptional()
