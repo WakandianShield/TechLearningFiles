@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FolderOpen, Pin, Calendar, Tag, FileIcon } from 'lucide-react';
-import { getCategoryColor, getCategoryLabel, sanitizeText } from '@/lib/utils';
+import { getCategoryColor, getCategoryLabel } from '@/lib/utils';
+import { sanitizeText } from '@/lib/sanitize';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
