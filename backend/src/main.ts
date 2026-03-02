@@ -56,9 +56,15 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT || 4000;
+  console.log(`Starting server on 0.0.0.0:${port}...`);
+  console.log(`DATABASE_URL set: ${!!process.env.DATABASE_URL}`);
+  console.log(`JWT_SECRET set: ${!!process.env.JWT_SECRET}`);
   await app.listen(port, '0.0.0.0');
   console.log(`🚀 Backend running on port ${port}`);
   console.log(`📚 API Docs: http://localhost:${port}/api/docs`);
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('❌ Failed to start application:', err);
+  process.exit(1);
+});
