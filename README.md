@@ -1,6 +1,6 @@
 # TechLearning - Academic Files Journey
 
-> Plataforma web para organizar, subir y gestionar todos tus proyectos académicos en un solo lugar. PDFs, documentos, videos, fotos, código y cualquier tipo de archivo.
+> Plataforma web fullstack para organizar, subir y gestionar proyectos academicos. Tema oscuro neon con estetica cyberpunk. Soporte para PDFs, documentos, videos, imagenes, codigo y cualquier tipo de archivo.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![NestJS](https://img.shields.io/badge/NestJS-10-red?logo=nestjs)
@@ -8,8 +8,10 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwindcss)
 ![Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?logo=railway)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+![Docker](https://img.shields.io/badge/Docker-Multi--stage-2496ED?logo=docker)
 
-### Links de Producción
+### Links de Produccion
 
 | Servicio | URL |
 |---|---|
@@ -21,7 +23,7 @@
 
 ## Tabla de Contenidos
 
-- [Características](#características)
+- [Caracteristicas](#caracteristicas)
 - [Tech Stack](#tech-stack)
 - [Arquitectura](#arquitectura)
 - [Estructura del Proyecto](#estructura-del-proyecto)
@@ -31,37 +33,61 @@
 - [API Endpoints](#api-endpoints)
 - [Seguridad](#seguridad)
 - [Deploy en Railway](#deploy-en-railway)
+- [Persistencia de Archivos](#persistencia-de-archivos)
 - [Troubleshooting](#troubleshooting)
 
 ---
 
-## Características
+## Caracteristicas
 
-- **Subida de archivos** — PDFs, documentos Word, videos, fotos, código, presentaciones y más (hasta 100MB por archivo, 20 simultáneos)
-- **Organización por proyecto** — Agrupa archivos por proyecto académico con categoría, materia, semestre y tags
-- **Búsqueda y filtrado** — Busca proyectos por nombre, materia, categoría
-- **Proyectos favoritos** — Fija los proyectos más importantes
-- **Dashboard** — Vista general con estadísticas de tus proyectos y archivos
-- **Autenticación** — Registro e inicio de sesión con JWT + NextAuth
-- **Seguridad** — Helmet, DOMPurify (sanitización XSS), validación de inputs
-- **Responsive** — Interfaz adaptable a móvil, tablet y desktop
-- **API documentada** — Swagger UI en `/api/docs`
+### Gestion de Archivos
+- **Subida de archivos** -- PDFs, documentos Word, videos, imagenes, codigo, presentaciones y mas (hasta 100MB por archivo, 20 simultaneos)
+- **Vista de archivos estilo Google Drive** -- Grid responsivo con thumbnails para imagenes, iconos por tipo de archivo (Lucide icons)
+- **Renombrar archivos** -- Nombre visual personalizable sin cambiar el archivo fisico
+- **Filtrado por tipo** -- Filtra archivos por PDF, imagen, video, documento, codigo, etc.
+- **Menu contextual** -- Click derecho o boton de opciones para descargar, renombrar o eliminar
+
+### Proyectos
+- **Organizacion por proyecto** -- Agrupa archivos por proyecto academico con categoria, materia, semestre y tags
+- **Visibilidad publica/privada** -- Cada proyecto puede ser publico o privado
+- **Proyectos favoritos (pin)** -- Fija los proyectos mas importantes en el dashboard
+- **Busqueda y filtrado** -- Busca proyectos por nombre, materia, categoria
+
+### Perfiles y Social
+- **Perfiles publicos** -- Cada usuario tiene un perfil publico con avatar, banner y bio
+- **Pagina de settings** -- Edita nombre, bio, avatar, banner e imagen de portada
+- **Links sociales** -- GitHub, LinkedIn, Twitter/X, sitio web personal
+- **Pagina Explore** -- Descubre proyectos publicos de otros usuarios
+
+### Interfaz
+- **Tema oscuro neon** -- Fondo oscuro (#0a0a0a), acento cyan (#64ffda), gradientes, estetica cyberpunk
+- **Fuentes** -- Press Start 2P (titulos) + Inter (cuerpo)
+- **Responsive** -- Adaptable a movil, tablet y desktop
+- **Iconos Lucide** -- Iconografia consistente sin emojis
+
+### Plataforma
+- **Dashboard** -- Vista general con estadisticas de proyectos y archivos
+- **Autenticacion** -- Registro e inicio de sesion con JWT + NextAuth
+- **Seguridad** -- Helmet, DOMPurify (sanitizacion XSS), validacion de inputs
+- **API documentada** -- Swagger UI en `/api/docs`
+- **Almacenamiento persistente** -- Soporte para Railway Volumes via variable `UPLOAD_DIR`
 
 ---
 
 ## Tech Stack
 
-| Componente | Tecnología |
+| Componente | Tecnologia |
 |---|---|
 | **Frontend** | Next.js 14 (App Router) |
 | **Backend** | NestJS 10 |
 | **Base de Datos** | PostgreSQL + Prisma ORM |
-| **Autenticación** | NextAuth.js + JWT (Passport) |
+| **Autenticacion** | NextAuth.js + JWT (Passport) |
 | **Estilos** | Tailwind CSS 3.4 |
+| **Iconos** | Lucide React |
 | **Seguridad** | Helmet + DOMPurify (isomorphic) |
-| **Upload** | Multer (disk storage) |
-| **Documentación API** | Swagger (OpenAPI) |
-| **Deploy** | Railway (Docker) |
+| **Upload** | Multer (disk storage, Railway Volume) |
+| **Documentacion API** | Swagger (OpenAPI) |
+| **Deploy** | Railway (Docker multi-stage) |
 | **Lenguaje** | TypeScript |
 
 ---
@@ -69,18 +95,19 @@
 ## Arquitectura
 
 ```
-┌─────────────────┐      ┌──────────────────┐      ┌──────────────┐
-│                  │      │                  │      │              │
-│   Next.js 14     │─────▶│   NestJS API     │─────▶│  PostgreSQL  │
-│   (Frontend)     │ HTTP │   (Backend)      │Prisma│  (Database)  │
-│                  │      │                  │      │              │
-│  - NextAuth      │      │  - JWT Auth      │      │              │
-│  - TailwindCSS   │      │  - Helmet        │      │              │
-│  - DOMPurify     │      │  - Multer Upload │      │              │
-│  - React Dropzone│      │  - Swagger Docs  │      │              │
-│                  │      │                  │      │              │
-└─────────────────┘      └──────────────────┘      └──────────────┘
-     :3000                     :4000
+┌──────────────────┐      ┌───────────────────┐      ┌──────────────┐
+│                  │      │                   │      │              │
+│   Next.js 14     │─────>│   NestJS API      │─────>│  PostgreSQL  │
+│   (Frontend)     │ HTTP │   (Backend)       │Prisma│  (Database)  │
+│                  │      │                   │      │              │
+│  - NextAuth      │      │  - JWT Auth       │      └──────────────┘
+│  - TailwindCSS   │      │  - Helmet         │
+│  - DOMPurify     │      │  - Multer Upload  │      ┌──────────────┐
+│  - Lucide Icons  │      │  - Swagger Docs   │─────>│   Volume     │
+│  - React Dropzone│      │  - Static Assets  │ R/W  │  /data/uploads│
+│                  │      │                   │      │  (persistent) │
+└──────────────────┘      └───────────────────┘      └──────────────┘
+     :3000                      :4000
 ```
 
 ---
@@ -94,34 +121,46 @@ TechLearningFiles/
 │   │   ├── schema.prisma         # Esquema de base de datos
 │   │   └── migrations/           # Migraciones SQL
 │   ├── src/
-│   │   ├── auth/                 # Autenticación (JWT + Passport)
-│   │   ├── users/                # Gestión de usuarios
+│   │   ├── auth/                 # Autenticacion (JWT + Passport)
+│   │   │   ├── dto/              # Login y Register DTOs
+│   │   │   ├── jwt.strategy.ts   # Passport JWT strategy
+│   │   │   └── jwt-auth.guard.ts # Guard de autenticacion
+│   │   ├── users/                # Gestion de usuarios
+│   │   │   ├── dto/              # Update profile DTO
+│   │   │   └── users.controller  # Avatar, banner, perfil publico
 │   │   ├── projects/             # CRUD de proyectos
-│   │   ├── files/                # Upload y gestión de archivos
+│   │   │   └── dto/              # Create/Update project DTOs
+│   │   ├── files/                # Upload y gestion de archivos
 │   │   ├── prisma/               # Prisma service
 │   │   ├── app.module.ts
-│   │   └── main.ts              # Entry point (listen 0.0.0.0)
+│   │   └── main.ts              # Entry point (0.0.0.0, static assets)
 │   ├── uploads/                  # Archivos subidos (gitignored)
-│   ├── Dockerfile                # node:20-slim + OpenSSL
-│   ├── package.json
-│   └── .env.example
+│   ├── Dockerfile                # node:20-slim multi-stage + OpenSSL
+│   └── package.json
 │
 ├── frontend/                     # Next.js App
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── api/auth/[...nextauth]/route.ts
 │   │   │   ├── auth/             # Login y Register
-│   │   │   ├── dashboard/        # Dashboard, proyectos, perfil
+│   │   │   ├── dashboard/
+│   │   │   │   ├── page.tsx      # Dashboard principal
+│   │   │   │   ├── projects/     # CRUD de proyectos + vista de archivos
+│   │   │   │   └── profile/      # Perfil y settings del usuario
 │   │   │   ├── layout.tsx
-│   │   │   └── page.tsx          # Landing page
-│   │   ├── components/           # Componentes reutilizables
+│   │   │   └── page.tsx          # Landing page (dark neon)
+│   │   ├── components/
+│   │   │   ├── FileList.tsx      # Grid de archivos estilo Google Drive
+│   │   │   ├── FileUploader.tsx  # Drag & drop upload
+│   │   │   ├── Navbar.tsx        # Barra de navegacion
+│   │   │   ├── ProjectCard.tsx   # Tarjeta de proyecto
+│   │   │   └── AuthProvider.tsx  # NextAuth provider
 │   │   └── lib/
 │   │       ├── api.ts            # Cliente API (axios)
 │   │       ├── sanitize.ts       # DOMPurify utils
-│   │       └── utils.ts          # Helpers
+│   │       └── utils.ts          # Helpers (iconos, formato)
 │   ├── Dockerfile                # node:20-alpine
-│   ├── package.json
-│   └── .env.example
+│   └── package.json
 │
 ├── railway.toml                  # Railway deploy config
 └── README.md
@@ -137,17 +176,15 @@ TechLearningFiles/
 - **PostgreSQL** 14+ (local o remota)
 - **npm**
 
-### Opción A: Con PostgreSQL local
-
-Si tienes PostgreSQL instalado, crea una base de datos:
+### Opcion A: Con PostgreSQL local
 
 ```sql
 CREATE DATABASE techlearning;
 ```
 
-### Opción B: Usando la DB de Railway (recomendado para empezar rápido)
+### Opcion B: Usando la DB de Railway
 
-Usa la URL pública de tu base de datos de Railway. La encuentras en Railway → PostgreSQL → Connect → Public URL.
+Usa la URL publica de tu base de datos de Railway. La encuentras en Railway > PostgreSQL > Connect > Public URL.
 
 ### 1. Clonar el repositorio
 
@@ -160,23 +197,14 @@ cd TechLearningFiles
 
 ```bash
 cd backend
-
-# Instalar dependencias
 npm install
-
-# Crear archivo de variables de entorno
 cp .env.example .env
 ```
 
-Edita `backend/.env` con tus valores:
+Edita `backend/.env`:
 
 ```env
-# Si usas PostgreSQL local:
 DATABASE_URL="postgresql://postgres:tu-password@localhost:5432/techlearning"
-
-# Si usas Railway, copia la URL desde Railway Dashboard > Variables:
-# DATABASE_URL se configura automáticamente en Railway
-
 JWT_SECRET="una-clave-secreta-cualquiera"
 JWT_EXPIRATION="7d"
 PORT=4000
@@ -186,30 +214,18 @@ MAX_FILE_SIZE=104857600
 ```
 
 ```bash
-# Generar Prisma Client
 npx prisma generate
-
-# Crear tablas en la base de datos
 npx prisma migrate dev --name init
-
-# Iniciar en modo desarrollo (hot reload)
 npm run start:dev
 ```
 
-El backend estará en **http://localhost:4000**  
-Swagger docs en **http://localhost:4000/api/docs**
+Backend en **http://localhost:4000** | Swagger en **http://localhost:4000/api/docs**
 
 ### 3. Configurar y levantar el Frontend
 
-Abre **otra terminal**:
-
 ```bash
 cd frontend
-
-# Instalar dependencias
 npm install
-
-# Crear archivo de variables de entorno
 cp .env.example .env.local
 ```
 
@@ -222,33 +238,28 @@ NEXT_PUBLIC_API_URL=http://localhost:4000/api
 ```
 
 ```bash
-# Iniciar en modo desarrollo (hot reload)
 npm run dev
 ```
 
-El frontend estará en **http://localhost:3000**
+Frontend en **http://localhost:3000**
 
-### 4. Desarrollo día a día
-
-Una vez configurado, solo necesitas abrir dos terminales:
+### 4. Desarrollo dia a dia
 
 ```bash
-# Terminal 1 — Backend (hot reload automático)
+# Terminal 1 -- Backend
 cd backend && npm run start:dev
 
-# Terminal 2 — Frontend (hot reload automático)
+# Terminal 2 -- Frontend
 cd frontend && npm run dev
 ```
 
-Los cambios se reflejan automáticamente sin necesidad de hacer push. Solo haz push cuando quieras actualizar producción.
-
-### Comandos útiles
+### Comandos utiles
 
 ```bash
-# Ver la base de datos con interfaz visual
+# Interfaz visual de la base de datos
 cd backend && npx prisma studio
 
-# Crear nueva migración después de cambiar schema.prisma
+# Nueva migracion tras cambiar schema.prisma
 cd backend && npx prisma migrate dev --name descripcion-del-cambio
 
 # Regenerar Prisma Client
@@ -264,19 +275,19 @@ cd frontend && npm run lint
 
 ### Backend (`backend/.env`)
 
-| Variable | Descripción | Local | Producción |
+| Variable | Descripcion | Local | Produccion |
 |---|---|---|---|
-| `DATABASE_URL` | URL de PostgreSQL | `postgresql://postgres:pass@localhost:5432/techlearning` | (se inyecta automáticamente desde Railway) |
+| `DATABASE_URL` | URL de PostgreSQL | `postgresql://postgres:pass@localhost:5432/techlearning` | Inyectada por Railway |
 | `JWT_SECRET` | Clave secreta para JWT | cualquier string | string seguro y aleatorio |
-| `JWT_EXPIRATION` | Expiración del token | `7d` | `7d` |
+| `JWT_EXPIRATION` | Expiracion del token | `7d` | `7d` |
 | `PORT` | Puerto del servidor | `4000` | `4000` |
 | `FRONTEND_URL` | URL del frontend (CORS) | `http://localhost:3000` | `https://adaptable-unity-production.up.railway.app` |
-| `UPLOAD_DIR` | Directorio de uploads | `./uploads` | `./uploads` |
-| `MAX_FILE_SIZE` | Tamaño máximo (bytes) | `104857600` | `104857600` |
+| `UPLOAD_DIR` | Directorio de uploads | `./uploads` | `/data/uploads` (Railway Volume) |
+| `MAX_FILE_SIZE` | Tamano maximo (bytes) | `104857600` | `104857600` |
 
 ### Frontend (`frontend/.env.local`)
 
-| Variable | Descripción | Local | Producción |
+| Variable | Descripcion | Local | Produccion |
 |---|---|---|---|
 | `NEXTAUTH_URL` | URL base del frontend | `http://localhost:3000` | `https://adaptable-unity-production.up.railway.app` |
 | `NEXTAUTH_SECRET` | Clave secreta NextAuth | cualquier string | string seguro y aleatorio |
@@ -289,45 +300,58 @@ cd frontend && npm run lint
 ### Modelos
 
 #### User
-| Campo | Tipo | Descripción |
+| Campo | Tipo | Descripcion |
 |---|---|---|
-| id | String (CUID) | ID único |
-| email | String | Email (único) |
+| id | String (CUID) | ID unico |
+| email | String | Email (unico) |
 | name | String | Nombre completo |
 | password | String | Hash bcrypt |
-| bio | String? | Biografía |
-| avatar | String? | URL avatar |
+| avatar | String? | Ruta de avatar (/uploads/...) |
+| banner | String? | Ruta de banner (/uploads/...) |
+| bio | String? | Biografia |
+| website | String? | Sitio web personal |
+| socialLinks | Json? | Links sociales (github, linkedin, twitter) |
+| createdAt | DateTime | Fecha de creacion |
+| updatedAt | DateTime | Ultima actualizacion |
 
 #### Project
-| Campo | Tipo | Descripción |
+| Campo | Tipo | Descripcion |
 |---|---|---|
-| id | String (CUID) | ID único |
-| title | String | Título del proyecto |
-| slug | String | URL amigable (único) |
-| description | String? | Descripción |
+| id | String (CUID) | ID unico |
+| title | String | Titulo del proyecto |
+| slug | String | URL amigable (unico) |
+| description | String? | Descripcion |
 | category | ProjectCategory | PROGRAMMING, MATH, SCIENCE, etc. |
+| visibility | ProjectVisibility | PUBLIC o PRIVATE |
 | tags | String[] | Etiquetas |
-| semester | String? | Semestre académico |
+| semester | String? | Semestre academico |
 | subject | String? | Materia/asignatura |
+| coverImage | String? | Imagen de portada |
 | pinned | Boolean | Fijado como favorito |
-| authorId | String | FK → User |
+| authorId | String | FK > User |
+| createdAt | DateTime | Fecha de creacion |
+| updatedAt | DateTime | Ultima actualizacion |
 
 #### ProjectFile
-| Campo | Tipo | Descripción |
+| Campo | Tipo | Descripcion |
 |---|---|---|
-| id | String (CUID) | ID único |
+| id | String (CUID) | ID unico |
 | originalName | String | Nombre original del archivo |
+| displayName | String? | Nombre visual personalizado |
 | fileName | String | Nombre UUID en disco |
-| filePath | String | Ruta de acceso |
+| filePath | String | Ruta de acceso (/uploads/...) |
 | mimeType | String | Tipo MIME |
-| size | Int | Tamaño en bytes |
+| size | Int | Tamano en bytes |
 | fileType | FileType | PDF, IMAGE, VIDEO, DOCUMENT, etc. |
-| description | String? | Descripción |
-| projectId | String | FK → Project |
+| description | String? | Descripcion |
+| projectId | String | FK > Project |
+| createdAt | DateTime | Fecha de creacion |
 
 ### Enums
 
 **ProjectCategory**: `PROGRAMMING`, `MATH`, `SCIENCE`, `DESIGN`, `WRITING`, `RESEARCH`, `PRESENTATION`, `LAB`, `OTHER`
+
+**ProjectVisibility**: `PUBLIC`, `PRIVATE`
 
 **FileType**: `PDF`, `DOCUMENT`, `IMAGE`, `VIDEO`, `AUDIO`, `CODE`, `SPREADSHEET`, `ARCHIVE`, `OTHER`
 
@@ -336,62 +360,71 @@ cd frontend && npm run lint
 ## API Endpoints
 
 ### Auth
-| Método | Ruta | Descripción |
+| Metodo | Ruta | Descripcion |
 |---|---|---|
 | POST | `/api/auth/register` | Registrar usuario |
-| POST | `/api/auth/login` | Iniciar sesión |
-| GET | `/api/auth/me` | Usuario actual (🔒) |
+| POST | `/api/auth/login` | Iniciar sesion |
+| GET | `/api/auth/me` | Usuario actual (auth) |
 
 ### Projects
-| Método | Ruta | Descripción |
+| Metodo | Ruta | Descripcion |
 |---|---|---|
-| GET | `/api/projects` | Listar proyectos (🔒) |
-| GET | `/api/projects/stats` | Estadísticas (🔒) |
-| GET | `/api/projects/:id` | Detalle de proyecto (🔒) |
-| POST | `/api/projects` | Crear proyecto (🔒) |
-| PUT | `/api/projects/:id` | Actualizar proyecto (🔒) |
-| DELETE | `/api/projects/:id` | Eliminar proyecto (🔒) |
-| PATCH | `/api/projects/:id/pin` | Toggle pin (🔒) |
+| GET | `/api/projects` | Listar proyectos del usuario (auth) |
+| GET | `/api/projects/stats` | Estadisticas (auth) |
+| GET | `/api/projects/explore` | Proyectos publicos (publico) |
+| GET | `/api/projects/public/:id` | Detalle de proyecto publico (publico) |
+| GET | `/api/projects/:id` | Detalle de proyecto (auth) |
+| POST | `/api/projects` | Crear proyecto (auth) |
+| PUT | `/api/projects/:id` | Actualizar proyecto (auth) |
+| DELETE | `/api/projects/:id` | Eliminar proyecto (auth) |
+| PATCH | `/api/projects/:id/pin` | Toggle pin (auth) |
 
 ### Files
-| Método | Ruta | Descripción |
+| Metodo | Ruta | Descripcion |
 |---|---|---|
-| POST | `/api/files/upload/:projectId` | Subir archivos (🔒) |
-| GET | `/api/files/project/:projectId` | Archivos de un proyecto (🔒) |
-| GET | `/api/files/:id` | Detalle de archivo (🔒) |
-| DELETE | `/api/files/:id` | Eliminar archivo (🔒) |
+| POST | `/api/files/upload/:projectId` | Subir archivos (auth) |
+| GET | `/api/files/project/:projectId` | Archivos de un proyecto (auth) |
+| GET | `/api/files/:id` | Detalle de archivo (auth) |
+| PATCH | `/api/files/:id/rename` | Renombrar archivo (auth) |
+| DELETE | `/api/files/:id` | Eliminar archivo (auth) |
 
 ### Users
-| Método | Ruta | Descripción |
+| Metodo | Ruta | Descripcion |
 |---|---|---|
-| GET | `/api/users/profile` | Ver perfil (🔒) |
-| PUT | `/api/users/profile` | Actualizar perfil (🔒) |
+| GET | `/api/users/profile` | Ver perfil propio (auth) |
+| PUT | `/api/users/profile` | Actualizar perfil (auth) |
+| POST | `/api/users/avatar` | Subir avatar (auth) |
+| POST | `/api/users/banner` | Subir banner (auth) |
+| GET | `/api/users/search` | Buscar usuarios (publico) |
+| GET | `/api/users/:id/public` | Perfil publico de usuario (publico) |
+| GET | `/api/users/:id/projects` | Proyectos publicos de usuario (publico) |
 
-> 🔒 = Requiere autenticación (Header: `Authorization: Bearer <token>`)
+> (auth) = Requiere header `Authorization: Bearer <token>`
 
 ---
 
 ## Seguridad
 
 ### Backend (NestJS)
-- **Helmet** — Headers HTTP de seguridad
-- **CORS** — Solo orígenes autorizados (frontend local + producción)
-- **bcrypt** — Hashing de contraseñas con salt rounds = 12
-- **JWT** — Tokens firmados con expiración configurable
-- **ValidationPipe** — Validación automática de DTOs (class-validator)
-- **Whitelist** — Solo se aceptan campos definidos en los DTOs
-- **Ownership checks** — Cada recurso verifica que el usuario sea el propietario
+- **Helmet** -- Headers HTTP de seguridad con `crossOriginResourcePolicy: cross-origin`
+- **CORS** -- Solo origenes autorizados (frontend local + produccion)
+- **bcrypt** -- Hashing de contrasenas con salt rounds = 12
+- **JWT** -- Tokens firmados con expiracion configurable
+- **ValidationPipe** -- Validacion automatica de DTOs (class-validator)
+- **Whitelist** -- Solo se aceptan campos definidos en los DTOs
+- **Ownership checks** -- Cada recurso verifica que el usuario sea el propietario
 
 ### Frontend (Next.js)
-- **DOMPurify** — Sanitización de inputs contra XSS
-- **CSP Headers** — Content-Security-Policy en next.config.js
-- **NextAuth.js** — Manejo seguro de sesiones
-- **sanitizeText / sanitizeHtml** — Funciones de sanitización en `lib/sanitize.ts`
+- **DOMPurify** -- Sanitizacion de inputs contra XSS (isomorphic)
+- **CSP Headers** -- Content-Security-Policy en next.config.js
+- **NextAuth.js** -- Manejo seguro de sesiones
+- **sanitizeText / sanitizeHtml** -- Funciones de sanitizacion en `lib/sanitize.ts`
 
 ### Archivos
-- **UUID filenames** — Nombres UUID para evitar colisiones y path traversal
-- **Límite de tamaño** — 100MB por archivo
-- **Límite de cantidad** — 20 archivos simultáneos
+- **UUID filenames** -- Nombres UUID para evitar colisiones y path traversal
+- **Limite de tamano** -- 100MB por archivo (10MB para avatar/banner)
+- **Limite de cantidad** -- 20 archivos simultaneos
+- **MIME type filtering** -- Solo imagenes para avatar/banner
 
 ---
 
@@ -399,18 +432,18 @@ cd frontend && npm run lint
 
 ### Servicios en Railway
 
-El proyecto usa 3 servicios en Railway:
+El proyecto usa 3 servicios:
 
-1. **PostgreSQL** — Base de datos
-2. **Backend** (Root Directory: `backend`) — NestJS API
-3. **Frontend** (Root Directory: `frontend`) — Next.js App
+1. **PostgreSQL** -- Base de datos
+2. **Backend** (Root Directory: `backend`) -- NestJS API con Dockerfile
+3. **Frontend** (Root Directory: `frontend`) -- Next.js con Dockerfile
 
-### Configuración del Backend en Railway
+### Configuracion del Backend
 
 **Settings:**
 - Root Directory: `backend`
-- Builder: Dockerfile (detectado automáticamente)
-- Custom Start Command: _(dejar vacío, el Dockerfile maneja todo)_
+- Builder: Dockerfile
+- Custom Start Command: (vacio, el Dockerfile maneja todo)
 
 **Variables:**
 ```
@@ -419,15 +452,15 @@ JWT_SECRET=<clave-secreta-segura>
 JWT_EXPIRATION=7d
 PORT=4000
 FRONTEND_URL=https://adaptable-unity-production.up.railway.app
-UPLOAD_DIR=./uploads
+UPLOAD_DIR=/data/uploads
 MAX_FILE_SIZE=104857600
 ```
 
-### Configuración del Frontend en Railway
+### Configuracion del Frontend
 
 **Settings:**
 - Root Directory: `frontend`
-- Builder: Dockerfile (detectado automáticamente)
+- Builder: Dockerfile
 
 **Variables:**
 ```
@@ -438,35 +471,55 @@ NEXT_PUBLIC_API_URL=https://techlearningfiles-production.up.railway.app/api
 
 ### Networking
 
-Cada servicio necesita un dominio público:
-- Backend → Settings → Networking → Generate Domain
-- Frontend → Settings → Networking → Generate Domain
+Cada servicio necesita un dominio publico:
+- Backend > Settings > Networking > Generate Domain
+- Frontend > Settings > Networking > Generate Domain
 
-### Notas importantes sobre Docker en Railway
+---
+
+## Persistencia de Archivos
+
+Railway usa un filesystem efimero: los archivos se pierden en cada redeploy. Para que los archivos subidos persistan, se necesita un **Railway Volume**.
+
+### Configurar Railway Volume
+
+1. Railway Dashboard > Servicio Backend > Settings > Volumes
+2. Click **Add Volume**
+3. Mount Path: `/data/uploads`
+4. Tamano: 1 GB (o mas segun necesidad)
+5. Agregar variable de entorno: `UPLOAD_DIR=/data/uploads`
+
+El backend lee `UPLOAD_DIR` para:
+- Guardar archivos subidos (Multer destination)
+- Servir archivos estaticos (`/uploads/` prefix)
+- Eliminar archivos fisicos
+
+Si `UPLOAD_DIR` no esta definido, usa `./uploads` como fallback (suficiente para desarrollo local).
+
+### Notas sobre Docker en Railway
 
 - El backend usa `node:20-slim` (no Alpine) para compatibilidad con Prisma/OpenSSL
-- El frontend usa `next start -H 0.0.0.0` para aceptar tráfico externo
-- El backend escucha en `0.0.0.0` (`app.listen(port, '0.0.0.0')`)
-- Las migraciones de Prisma se ejecutan automáticamente al iniciar el contenedor
-- **No** usar Custom Start Command si el Dockerfile ya tiene CMD definido
-- Usa **Railway Volumes** si necesitas persistencia de archivos entre deploys
+- El frontend usa `next start -H 0.0.0.0` para aceptar trafico externo
+- El backend escucha en `0.0.0.0`
+- Prisma migrate se ejecuta automaticamente al iniciar el contenedor
+- El CMD del Dockerfile crea el directorio `UPLOAD_DIR` si no existe
 
 ---
 
 ## Formatos de Archivos Soportados
 
-| Tipo | Extensiones | Icono |
-|---|---|---|
-| PDF | .pdf | 📄 |
-| Documentos | .doc, .docx, .txt, .rtf | 📝 |
-| Imágenes | .jpg, .png, .gif, .svg, .webp | 🖼️ |
-| Videos | .mp4, .mov, .avi, .mkv | 🎬 |
-| Audio | .mp3, .wav, .ogg | 🎵 |
-| Código | .js, .ts, .py, .java, .html, .css | 💻 |
-| Hojas de cálculo | .xlsx, .csv | 📊 |
-| Archivos comprimidos | .zip, .rar, .tar.gz | 📦 |
-| Presentaciones | .pptx, .ppt | 📽️ |
-| Otros | cualquier formato | 📎 |
+| Tipo | Extensiones |
+|---|---|
+| PDF | .pdf |
+| Documentos | .doc, .docx, .txt, .rtf |
+| Imagenes | .jpg, .png, .gif, .svg, .webp |
+| Videos | .mp4, .mov, .avi, .mkv |
+| Audio | .mp3, .wav, .ogg |
+| Codigo | .js, .ts, .py, .java, .html, .css, .json, .xml |
+| Hojas de calculo | .xlsx, .csv |
+| Archivos comprimidos | .zip, .rar, .tar.gz, .7z |
+| Presentaciones | .pptx, .ppt |
+| Otros | cualquier formato |
 
 ---
 
@@ -474,16 +527,21 @@ Cada servicio necesita un dominio público:
 
 ### "Application failed to respond" en Railway
 - Verificar que el servicio escucha en `0.0.0.0` (no `localhost`)
-- Verificar que las variables de entorno están configuradas en Railway (no solo en `.env` local)
-- Revisar los logs de runtime en Railway → Deployments → click en deploy → Logs
+- Verificar que las variables de entorno estan configuradas en Railway
+- Revisar logs: Railway > Deployments > click en deploy > Logs
 - No usar Custom Start Command si el Dockerfile ya tiene CMD
 
+### Archivos devuelven 404 tras redeploy
+- Causa: Railway filesystem efimero borra los archivos al redesplegar
+- Solucion: Configurar un Railway Volume montado en `/data/uploads` y variable `UPLOAD_DIR=/data/uploads`
+- Ver seccion [Persistencia de Archivos](#persistencia-de-archivos)
+
 ### Error de CORS
-- Verificar que `FRONTEND_URL` en el backend apunta al dominio correcto del frontend con `https://`
-- El backend permite orígenes configurados en `main.ts`
+- Verificar que `FRONTEND_URL` en el backend usa `https://` y apunta al dominio correcto
+- El backend permite origenes configurados en `main.ts`
 
 ### Prisma "No migration found"
-- Los archivos de migración deben estar en el repo: `backend/prisma/migrations/`
+- Los archivos de migracion deben estar en el repo: `backend/prisma/migrations/`
 - Generar migraciones localmente: `npx prisma migrate dev --name nombre`
 - Hacer commit y push de la carpeta `migrations/`
 
@@ -492,11 +550,15 @@ Cada servicio necesita un dominio público:
 - Instalar OpenSSL: `RUN apt-get update -y && apt-get install -y openssl`
 
 ### npm ci falla en Docker
-- Asegurar que `package-lock.json` está en el repo (no en `.gitignore`)
+- Asegurar que `package-lock.json` esta en el repo
 - Generar: `npm install --package-lock-only`
+
+### Avatar o banner no se muestra
+- Verificar que la URL es `${BACKEND_URL}/uploads/uuid.ext` (sin `/api` en el medio)
+- Los campos `avatar` y `banner` guardan la ruta como `/uploads/uuid.ext`
 
 ---
 
 ## Licencia
 
-Este proyecto es de uso personal/académico. Creado por [@WakandianShield](https://github.com/WakandianShield).
+Proyecto de uso personal/academico. Creado por [@WakandianShield](https://github.com/WakandianShield).
