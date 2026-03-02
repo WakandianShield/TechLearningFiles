@@ -24,4 +24,4 @@ COPY --from=builder /app/prisma ./prisma
 RUN mkdir -p uploads
 
 EXPOSE 4000
-CMD ["sh", "-c", "npx prisma migrate deploy || true && node dist/main"]
+CMD ["sh", "-c", "(npx prisma migrate deploy || echo 'Migration skipped') && node dist/main"]
