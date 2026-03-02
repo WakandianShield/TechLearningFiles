@@ -38,6 +38,7 @@ export const createProject = (data: {
   tags?: string[];
   semester?: string;
   subject?: string;
+  visibility?: string;
 }) => api.post('/projects', data);
 
 export const updateProject = (id: string, data: any) => api.put(`/projects/${id}`, data);
@@ -47,6 +48,12 @@ export const deleteProject = (id: string) => api.delete(`/projects/${id}`);
 export const togglePinProject = (id: string) => api.patch(`/projects/${id}/pin`);
 
 export const getProjectStats = () => api.get('/projects/stats');
+
+// Explore (public)
+export const exploreProjects = (params?: { category?: string; search?: string }) =>
+  api.get('/projects/explore', { params });
+
+export const getPublicProject = (id: string) => api.get(`/projects/public/${id}`);
 
 // Files
 export const uploadFiles = (projectId: string, files: File[], description?: string) => {
@@ -64,10 +71,38 @@ export const getProjectFiles = (projectId: string, fileType?: string) =>
 
 export const deleteFile = (fileId: string) => api.delete(`/files/${fileId}`);
 
+export const renameFile = (fileId: string, displayName: string) =>
+  api.patch(`/files/${fileId}/rename`, { displayName });
+
 // Profile
 export const getProfile = () => api.get('/users/profile');
 
-export const updateProfile = (data: { name?: string; bio?: string }) =>
+export const updateProfile = (data: { name?: string; bio?: string; website?: string; socialLinks?: Record<string, string> }) =>
   api.put('/users/profile', data);
+
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return api.post('/users/avatar', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
+
+export const uploadBanner = (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return api.post('/users/banner', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
+
+// Public profiles & search
+export const getPublicProfile = (userId: string) => api.get(`/users/${userId}/public`);
+
+export const getPublicUserProjects = (userId: string, category?: string) =>
+  api.get(`/users/${userId}/projects`, { params: category ? { category } : {} });
+
+export const searchUsers = (query: string) =>
+  api.get('/users/search', { params: { q: query } });
 
 export default api;

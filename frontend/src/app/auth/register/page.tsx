@@ -64,29 +64,29 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-blue-50 px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1a24 100%)' }}>
+      <div className="w-full max-w-md animate-fade-in-up">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
-            <BookOpen className="h-10 w-10 text-primary-600" />
-            <span className="text-2xl font-bold text-gray-900">TechLearning</span>
+            <BookOpen className="h-10 w-10 text-accent-cyan" />
+            <span className="text-2xl font-bold gradient-text">TechLearning</span>
           </Link>
         </div>
 
         <div className="card p-8">
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-100 text-center mb-6">
             Crear Cuenta
           </h2>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            <div className="mb-4 p-3 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-sm">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
               <input
                 type="text"
                 className="input"
@@ -98,7 +98,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
               <input
                 type="email"
                 className="input"
@@ -110,7 +110,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Contraseña</label>
               <input
                 type="password"
                 className="input"
@@ -122,7 +122,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Confirmar contraseña</label>
               <input
                 type="password"
                 className="input"
@@ -139,9 +139,9 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-gray-400">
             ¿Ya tienes cuenta?{' '}
-            <Link href="/auth/login" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link href="/auth/login" className="text-accent-cyan hover:text-accent-cyan/80 font-medium">
               Inicia sesión
             </Link>
           </p>

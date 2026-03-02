@@ -9,35 +9,43 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwindcss)
 ![Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?logo=railway)
 
+### Links de Producción
+
+| Servicio | URL |
+|---|---|
+| **Frontend** | [adaptable-unity-production.up.railway.app](https://adaptable-unity-production.up.railway.app) |
+| **Backend API** | [techlearningfiles-production.up.railway.app/api](https://techlearningfiles-production.up.railway.app/api) |
+| **API Docs (Swagger)** | [techlearningfiles-production.up.railway.app/api/docs](https://techlearningfiles-production.up.railway.app/api/docs) |
+
 ---
 
 ## Tabla de Contenidos
 
-- [Características](#-características)
-- [Tech Stack](#-tech-stack)
-- [Arquitectura](#-arquitectura)
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Instalación Local](#-instalación-local)
-- [Variables de Entorno](#-variables-de-entorno)
-- [Base de Datos](#-base-de-datos)
-- [API Endpoints](#-api-endpoints)
-- [Seguridad](#-seguridad)
-- [Deploy en Railway](#-deploy-en-railway)
-- [Screenshots](#-screenshots)
+- [Características](#características)
+- [Tech Stack](#tech-stack)
+- [Arquitectura](#arquitectura)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Desarrollo Local](#desarrollo-local)
+- [Variables de Entorno](#variables-de-entorno)
+- [Base de Datos](#base-de-datos)
+- [API Endpoints](#api-endpoints)
+- [Seguridad](#seguridad)
+- [Deploy en Railway](#deploy-en-railway)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Características
 
-- **Subida de archivos** — Sube PDFs, documentos Word, videos, fotos, código, presentaciones y más (hasta 100MB por archivo, 20 archivos simultáneos)
+- **Subida de archivos** — PDFs, documentos Word, videos, fotos, código, presentaciones y más (hasta 100MB por archivo, 20 simultáneos)
 - **Organización por proyecto** — Agrupa archivos por proyecto académico con categoría, materia, semestre y tags
 - **Búsqueda y filtrado** — Busca proyectos por nombre, materia, categoría
 - **Proyectos favoritos** — Fija los proyectos más importantes
 - **Dashboard** — Vista general con estadísticas de tus proyectos y archivos
 - **Autenticación** — Registro e inicio de sesión con JWT + NextAuth
-- **Seguridad** — Helmet (headers HTTP), DOMPurify (sanitización XSS), validación de inputs
+- **Seguridad** — Helmet, DOMPurify (sanitización XSS), validación de inputs
 - **Responsive** — Interfaz adaptable a móvil, tablet y desktop
-- **API documentada** — Swagger UI disponible en `/api/docs`
+- **API documentada** — Swagger UI en `/api/docs`
 
 ---
 
@@ -53,7 +61,7 @@
 | **Seguridad** | Helmet + DOMPurify (isomorphic) |
 | **Upload** | Multer (disk storage) |
 | **Documentación API** | Swagger (OpenAPI) |
-| **Deploy** | Railway |
+| **Deploy** | Railway (Docker) |
 | **Lenguaje** | TypeScript |
 
 ---
@@ -72,7 +80,7 @@
 │  - React Dropzone│      │  - Swagger Docs  │      │              │
 │                  │      │                  │      │              │
 └─────────────────┘      └──────────────────┘      └──────────────┘
-        :3000                    :4000
+     :3000                     :4000
 ```
 
 ---
@@ -81,97 +89,65 @@
 
 ```
 TechLearningFiles/
-├── backend/                    # NestJS API
+├── backend/                      # NestJS API
 │   ├── prisma/
-│   │   └── schema.prisma       # Esquema de base de datos
+│   │   ├── schema.prisma         # Esquema de base de datos
+│   │   └── migrations/           # Migraciones SQL
 │   ├── src/
-│   │   ├── auth/               # Módulo de autenticación
-│   │   │   ├── auth.module.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── jwt.strategy.ts
-│   │   │   ├── jwt-auth.guard.ts
-│   │   │   └── dto/
-│   │   │       ├── login.dto.ts
-│   │   │       └── register.dto.ts
-│   │   ├── users/              # Módulo de usuarios
-│   │   │   ├── users.module.ts
-│   │   │   ├── users.service.ts
-│   │   │   ├── users.controller.ts
-│   │   │   └── dto/
-│   │   │       └── update-profile.dto.ts
-│   │   ├── projects/           # Módulo de proyectos
-│   │   │   ├── projects.module.ts
-│   │   │   ├── projects.service.ts
-│   │   │   ├── projects.controller.ts
-│   │   │   └── dto/
-│   │   │       ├── create-project.dto.ts
-│   │   │       └── update-project.dto.ts
-│   │   ├── files/              # Módulo de archivos/upload
-│   │   │   ├── files.module.ts
-│   │   │   ├── files.service.ts
-│   │   │   └── files.controller.ts
-│   │   ├── prisma/             # Prisma service
-│   │   │   ├── prisma.module.ts
-│   │   │   └── prisma.service.ts
+│   │   ├── auth/                 # Autenticación (JWT + Passport)
+│   │   ├── users/                # Gestión de usuarios
+│   │   ├── projects/             # CRUD de proyectos
+│   │   ├── files/                # Upload y gestión de archivos
+│   │   ├── prisma/               # Prisma service
 │   │   ├── app.module.ts
-│   │   ├── app.controller.ts
-│   │   ├── app.service.ts
-│   │   └── main.ts
-│   ├── uploads/                # Archivos subidos (gitignored)
-│   ├── Dockerfile
+│   │   └── main.ts              # Entry point (listen 0.0.0.0)
+│   ├── uploads/                  # Archivos subidos (gitignored)
+│   ├── Dockerfile                # node:20-slim + OpenSSL
 │   ├── package.json
 │   └── .env.example
 │
-├── frontend/                   # Next.js App
+├── frontend/                     # Next.js App
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── api/auth/[...nextauth]/route.ts  # NextAuth
-│   │   │   ├── auth/
-│   │   │   │   ├── login/page.tsx
-│   │   │   │   └── register/page.tsx
-│   │   │   ├── dashboard/
-│   │   │   │   ├── layout.tsx
-│   │   │   │   ├── page.tsx                # Dashboard principal
-│   │   │   │   ├── projects/
-│   │   │   │   │   ├── page.tsx            # Lista de proyectos
-│   │   │   │   │   ├── new/page.tsx        # Crear proyecto
-│   │   │   │   │   └── [id]/page.tsx       # Detalle + archivos
-│   │   │   │   └── profile/page.tsx
+│   │   │   ├── api/auth/[...nextauth]/route.ts
+│   │   │   ├── auth/             # Login y Register
+│   │   │   ├── dashboard/        # Dashboard, proyectos, perfil
 │   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx                    # Landing page
-│   │   │   └── globals.css
-│   │   ├── components/
-│   │   │   ├── AuthProvider.tsx
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── FileUploader.tsx
-│   │   │   ├── FileList.tsx
-│   │   │   └── ProjectCard.tsx
+│   │   │   └── page.tsx          # Landing page
+│   │   ├── components/           # Componentes reutilizables
 │   │   └── lib/
-│   │       ├── api.ts                      # Cliente API (axios)
-│   │       ├── sanitize.ts                 # DOMPurify utils
-│   │       └── utils.ts                    # Helpers
-│   ├── Dockerfile
-│   ├── next.config.js
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
+│   │       ├── api.ts            # Cliente API (axios)
+│   │       ├── sanitize.ts       # DOMPurify utils
+│   │       └── utils.ts          # Helpers
+│   ├── Dockerfile                # node:20-alpine
 │   ├── package.json
 │   └── .env.example
 │
-├── railway.toml                # Railway deploy config
-├── .gitignore
+├── railway.toml                  # Railway deploy config
 └── README.md
 ```
 
 ---
 
-## Instalación Local
+## Desarrollo Local
 
 ### Requisitos previos
 
 - **Node.js** 18+ (recomendado 20)
-- **PostgreSQL** 14+ (o usar Docker)
-- **npm** o **yarn**
+- **PostgreSQL** 14+ (local o remota)
+- **npm**
+
+### Opción A: Con PostgreSQL local
+
+Si tienes PostgreSQL instalado, crea una base de datos:
+
+```sql
+CREATE DATABASE techlearning;
+```
+
+### Opción B: Usando la DB de Railway (recomendado para empezar rápido)
+
+Usa la URL pública de tu base de datos de Railway. La encuentras en Railway → PostgreSQL → Connect → Public URL.
 
 ### 1. Clonar el repositorio
 
@@ -180,7 +156,7 @@ git clone https://github.com/WakandianShield/TechLearningFiles.git
 cd TechLearningFiles
 ```
 
-### 2. Configurar el Backend
+### 2. Configurar y levantar el Backend
 
 ```bash
 cd backend
@@ -188,24 +164,44 @@ cd backend
 # Instalar dependencias
 npm install
 
-# Copiar variables de entorno
+# Crear archivo de variables de entorno
 cp .env.example .env
-# Editar .env con tus valores (DATABASE_URL, JWT_SECRET, etc.)
+```
 
+Edita `backend/.env` con tus valores:
+
+```env
+# Si usas PostgreSQL local:
+DATABASE_URL="postgresql://postgres:tu-password@localhost:5432/techlearning"
+
+# Si usas la DB de Railway (URL pública):
+DATABASE_URL="postgresql://postgres:fwtKGAaPLuNSxrSeTsyNprFNDTylLsAo@interchange.proxy.rlwy.net:24722/railway"
+
+JWT_SECRET="una-clave-secreta-cualquiera"
+JWT_EXPIRATION="7d"
+PORT=4000
+FRONTEND_URL="http://localhost:3000"
+UPLOAD_DIR="./uploads"
+MAX_FILE_SIZE=104857600
+```
+
+```bash
 # Generar Prisma Client
 npx prisma generate
 
-# Ejecutar migraciones
+# Crear tablas en la base de datos
 npx prisma migrate dev --name init
 
-# Iniciar en desarrollo
+# Iniciar en modo desarrollo (hot reload)
 npm run start:dev
 ```
 
-El backend estará disponible en `http://localhost:4000`  
-Swagger docs en `http://localhost:4000/api/docs`
+El backend estará en **http://localhost:4000**  
+Swagger docs en **http://localhost:4000/api/docs**
 
-### 3. Configurar el Frontend
+### 3. Configurar y levantar el Frontend
+
+Abre **otra terminal**:
 
 ```bash
 cd frontend
@@ -213,15 +209,54 @@ cd frontend
 # Instalar dependencias
 npm install
 
-# Copiar variables de entorno
+# Crear archivo de variables de entorno
 cp .env.example .env.local
-# Editar .env.local con tus valores
+```
 
-# Iniciar en desarrollo
+Edita `frontend/.env.local`:
+
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=cualquier-clave-secreta-local
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+```
+
+```bash
+# Iniciar en modo desarrollo (hot reload)
 npm run dev
 ```
 
-El frontend estará disponible en `http://localhost:3000`
+El frontend estará en **http://localhost:3000**
+
+### 4. Desarrollo día a día
+
+Una vez configurado, solo necesitas abrir dos terminales:
+
+```bash
+# Terminal 1 — Backend (hot reload automático)
+cd backend && npm run start:dev
+
+# Terminal 2 — Frontend (hot reload automático)
+cd frontend && npm run dev
+```
+
+Los cambios se reflejan automáticamente sin necesidad de hacer push. Solo haz push cuando quieras actualizar producción.
+
+### Comandos útiles
+
+```bash
+# Ver la base de datos con interfaz visual
+cd backend && npx prisma studio
+
+# Crear nueva migración después de cambiar schema.prisma
+cd backend && npx prisma migrate dev --name descripcion-del-cambio
+
+# Regenerar Prisma Client
+cd backend && npx prisma generate
+
+# Lint del frontend
+cd frontend && npm run lint
+```
 
 ---
 
@@ -229,23 +264,23 @@ El frontend estará disponible en `http://localhost:3000`
 
 ### Backend (`backend/.env`)
 
-| Variable | Descripción | Ejemplo |
-|---|---|---|
-| `DATABASE_URL` | URL de conexión a PostgreSQL | `postgresql://postgres:pass@localhost:5432/techlearning` |
-| `JWT_SECRET` | Clave secreta para tokens JWT | `mi-clave-super-secreta-123` |
-| `JWT_EXPIRATION` | Tiempo de expiración del token | `7d` |
-| `PORT` | Puerto del servidor | `4000` |
-| `FRONTEND_URL` | URL del frontend (para CORS) | `http://localhost:3000` |
-| `UPLOAD_DIR` | Directorio para archivos subidos | `./uploads` |
-| `MAX_FILE_SIZE` | Tamaño máximo en bytes (100MB) | `104857600` |
+| Variable | Descripción | Local | Producción |
+|---|---|---|---|
+| `DATABASE_URL` | URL de PostgreSQL | `postgresql://postgres:pass@localhost:5432/techlearning` | `postgresql://...@postgres.railway.internal:5432/railway` |
+| `JWT_SECRET` | Clave secreta para JWT | cualquier string | string seguro y aleatorio |
+| `JWT_EXPIRATION` | Expiración del token | `7d` | `7d` |
+| `PORT` | Puerto del servidor | `4000` | `4000` |
+| `FRONTEND_URL` | URL del frontend (CORS) | `http://localhost:3000` | `https://adaptable-unity-production.up.railway.app` |
+| `UPLOAD_DIR` | Directorio de uploads | `./uploads` | `./uploads` |
+| `MAX_FILE_SIZE` | Tamaño máximo (bytes) | `104857600` | `104857600` |
 
 ### Frontend (`frontend/.env.local`)
 
-| Variable | Descripción | Ejemplo |
-|---|---|---|
-| `NEXTAUTH_URL` | URL base del frontend | `http://localhost:3000` |
-| `NEXTAUTH_SECRET` | Clave secreta para NextAuth | `otra-clave-secreta-456` |
-| `NEXT_PUBLIC_API_URL` | URL del API backend | `http://localhost:4000/api` |
+| Variable | Descripción | Local | Producción |
+|---|---|---|---|
+| `NEXTAUTH_URL` | URL base del frontend | `http://localhost:3000` | `https://adaptable-unity-production.up.railway.app` |
+| `NEXTAUTH_SECRET` | Clave secreta NextAuth | cualquier string | string seguro y aleatorio |
+| `NEXT_PUBLIC_API_URL` | URL del API backend | `http://localhost:4000/api` | `https://techlearningfiles-production.up.railway.app/api` |
 
 ---
 
@@ -253,7 +288,7 @@ El frontend estará disponible en `http://localhost:3000`
 
 ### Modelos
 
-#### User (usuarios)
+#### User
 | Campo | Tipo | Descripción |
 |---|---|---|
 | id | String (CUID) | ID único |
@@ -263,21 +298,21 @@ El frontend estará disponible en `http://localhost:3000`
 | bio | String? | Biografía |
 | avatar | String? | URL avatar |
 
-#### Project (proyectos)
+#### Project
 | Campo | Tipo | Descripción |
 |---|---|---|
 | id | String (CUID) | ID único |
 | title | String | Título del proyecto |
 | slug | String | URL amigable (único) |
 | description | String? | Descripción |
-| category | Enum | PROGRAMMING, MATH, SCIENCE, etc. |
+| category | ProjectCategory | PROGRAMMING, MATH, SCIENCE, etc. |
 | tags | String[] | Etiquetas |
 | semester | String? | Semestre académico |
 | subject | String? | Materia/asignatura |
 | pinned | Boolean | Fijado como favorito |
 | authorId | String | FK → User |
 
-#### ProjectFile (archivos)
+#### ProjectFile
 | Campo | Tipo | Descripción |
 |---|---|---|
 | id | String (CUID) | ID único |
@@ -286,18 +321,15 @@ El frontend estará disponible en `http://localhost:3000`
 | filePath | String | Ruta de acceso |
 | mimeType | String | Tipo MIME |
 | size | Int | Tamaño en bytes |
-| fileType | Enum | PDF, IMAGE, VIDEO, DOCUMENT, etc. |
+| fileType | FileType | PDF, IMAGE, VIDEO, DOCUMENT, etc. |
 | description | String? | Descripción |
 | projectId | String | FK → Project |
 
-### Comandos Prisma útiles
+### Enums
 
-```bash
-npx prisma migrate dev --name <nombre>   # Crear migración
-npx prisma migrate deploy                 # Aplicar migraciones (prod)
-npx prisma studio                          # GUI para la BD
-npx prisma generate                        # Regenerar client
-```
+**ProjectCategory**: `PROGRAMMING`, `MATH`, `SCIENCE`, `DESIGN`, `WRITING`, `RESEARCH`, `PRESENTATION`, `LAB`, `OTHER`
+
+**FileType**: `PDF`, `DOCUMENT`, `IMAGE`, `VIDEO`, `AUDIO`, `CODE`, `SPREADSHEET`, `ARCHIVE`, `OTHER`
 
 ---
 
@@ -335,89 +367,89 @@ npx prisma generate                        # Regenerar client
 | GET | `/api/users/profile` | Ver perfil (🔒) |
 | PUT | `/api/users/profile` | Actualizar perfil (🔒) |
 
-> 🔒 = Requiere autenticación (Bearer Token)
+> 🔒 = Requiere autenticación (Header: `Authorization: Bearer <token>`)
 
 ---
 
 ## Seguridad
 
 ### Backend (NestJS)
-- **Helmet** — Headers HTTP de seguridad (X-Content-Type-Options, X-Frame-Options, HSTS, etc.)
-- **CORS** — Configurado para permitir solo el frontend autorizado
+- **Helmet** — Headers HTTP de seguridad
+- **CORS** — Solo orígenes autorizados (frontend local + producción)
 - **bcrypt** — Hashing de contraseñas con salt rounds = 12
 - **JWT** — Tokens firmados con expiración configurable
-- **ValidationPipe** — Validación automática de DTOs con class-validator
+- **ValidationPipe** — Validación automática de DTOs (class-validator)
 - **Whitelist** — Solo se aceptan campos definidos en los DTOs
 - **Ownership checks** — Cada recurso verifica que el usuario sea el propietario
 
 ### Frontend (Next.js)
-- **DOMPurify** — Sanitización de todo input de usuario antes de renderizar
-- **Content-Security-Policy** — Headers CSP configurados en next.config.js
-- **NextAuth.js** — Manejo seguro de sesiones con JWT
-- **Inputs sanitizados** — Toda entrada de usuario pasa por `sanitizeText()` o `sanitizeHtml()`
+- **DOMPurify** — Sanitización de inputs contra XSS
+- **CSP Headers** — Content-Security-Policy en next.config.js
+- **NextAuth.js** — Manejo seguro de sesiones
+- **sanitizeText / sanitizeHtml** — Funciones de sanitización en `lib/sanitize.ts`
 
 ### Archivos
-- **UUID filenames** — Los archivos se guardan con nombres UUID para evitar colisiones y path traversal
-- **Límite de tamaño** — 100MB por archivo máximo
-- **Límite de cantidad** — 20 archivos simultáneos máximo
+- **UUID filenames** — Nombres UUID para evitar colisiones y path traversal
+- **Límite de tamaño** — 100MB por archivo
+- **Límite de cantidad** — 20 archivos simultáneos
 
 ---
 
 ## Deploy en Railway
 
-### Paso 1: Crear proyecto en Railway
+### Servicios en Railway
 
-1. Ve a [railway.app](https://railway.app) y crea una cuenta
-2. Crea un **New Project**
-3. Conecta tu repositorio de GitHub
+El proyecto usa 3 servicios en Railway:
 
-### Paso 2: Agregar PostgreSQL
+1. **PostgreSQL** — Base de datos
+2. **Backend** (Root Directory: `backend`) — NestJS API
+3. **Frontend** (Root Directory: `frontend`) — Next.js App
 
-1. Click en **"+ New"** → **"Database"** → **"PostgreSQL"**
-2. Railway creará automáticamente la variable `DATABASE_URL`
+### Configuración del Backend en Railway
 
-### Paso 3: Configurar el Backend
+**Settings:**
+- Root Directory: `backend`
+- Builder: Dockerfile (detectado automáticamente)
+- Custom Start Command: _(dejar vacío, el Dockerfile maneja todo)_
 
-1. Click en **"+ New"** → **"GitHub Repo"** → selecciona tu repo
-2. En **Settings**:
-   - **Root Directory**: `backend`
-   - **Build Command**: `npm run build`
-   - **Start Command**: `npx prisma migrate deploy && npm run start:prod`
-3. En **Variables**, agregar:
-   ```
-   DATABASE_URL=${{Postgres.DATABASE_URL}}
-   JWT_SECRET=<tu-clave-secreta>
-   JWT_EXPIRATION=7d
-   PORT=4000
-   FRONTEND_URL=https://tu-frontend.up.railway.app
-   UPLOAD_DIR=./uploads
-   MAX_FILE_SIZE=104857600
-   ```
+**Variables:**
+```
+DATABASE_URL=postgresql://...@postgres.railway.internal:5432/railway
+JWT_SECRET=<clave-secreta-segura>
+JWT_EXPIRATION=7d
+PORT=4000
+FRONTEND_URL=https://adaptable-unity-production.up.railway.app
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE=104857600
+```
 
-### Paso 4: Configurar el Frontend
+### Configuración del Frontend en Railway
 
-1. Click en **"+ New"** → **"GitHub Repo"** → selecciona el mismo repo
-2. En **Settings**:
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build`
-   - **Start Command**: `npm start`
-3. En **Variables**, agregar:
-   ```
-   NEXTAUTH_URL=https://tu-frontend.up.railway.app
-   NEXTAUTH_SECRET=<otra-clave-secreta>
-   NEXT_PUBLIC_API_URL=https://tu-backend.up.railway.app/api
-   ```
+**Settings:**
+- Root Directory: `frontend`
+- Builder: Dockerfile (detectado automáticamente)
 
-### Paso 5: Generar dominios
+**Variables:**
+```
+NEXTAUTH_URL=https://adaptable-unity-production.up.railway.app
+NEXTAUTH_SECRET=<otra-clave-secreta>
+NEXT_PUBLIC_API_URL=https://techlearningfiles-production.up.railway.app/api
+```
 
-1. En cada servicio → **Settings** → **Networking** → **Generate Domain**
-2. Actualizar las variables `FRONTEND_URL` y `NEXT_PUBLIC_API_URL` con los dominios generados
+### Networking
 
-### Tips para Railway
+Cada servicio necesita un dominio público:
+- Backend → Settings → Networking → Generate Domain
+- Frontend → Settings → Networking → Generate Domain
 
-- Usa **Railway Volumes** si necesitas persistencia de archivos subidos entre deploys
-- Las migraciones de Prisma se ejecutan automáticamente en el start command
-- Puedes ver logs en tiempo real desde el dashboard de Railway
+### Notas importantes sobre Docker en Railway
+
+- El backend usa `node:20-slim` (no Alpine) para compatibilidad con Prisma/OpenSSL
+- El frontend usa `next start -H 0.0.0.0` para aceptar tráfico externo
+- El backend escucha en `0.0.0.0` (`app.listen(port, '0.0.0.0')`)
+- Las migraciones de Prisma se ejecutan automáticamente al iniciar el contenedor
+- **No** usar Custom Start Command si el Dockerfile ya tiene CMD definido
+- Usa **Railway Volumes** si necesitas persistencia de archivos entre deploys
 
 ---
 
@@ -438,18 +470,30 @@ npx prisma generate                        # Regenerar client
 
 ---
 
-## Desarrollo
+## Troubleshooting
 
-```bash
-# Backend (terminal 1)
-cd backend && npm run start:dev
+### "Application failed to respond" en Railway
+- Verificar que el servicio escucha en `0.0.0.0` (no `localhost`)
+- Verificar que las variables de entorno están configuradas en Railway (no solo en `.env` local)
+- Revisar los logs de runtime en Railway → Deployments → click en deploy → Logs
+- No usar Custom Start Command si el Dockerfile ya tiene CMD
 
-# Frontend (terminal 2) 
-cd frontend && npm run dev
+### Error de CORS
+- Verificar que `FRONTEND_URL` en el backend apunta al dominio correcto del frontend con `https://`
+- El backend permite orígenes configurados en `main.ts`
 
-# Prisma Studio (terminal 3 - opcional)
-cd backend && npx prisma studio
-```
+### Prisma "No migration found"
+- Los archivos de migración deben estar en el repo: `backend/prisma/migrations/`
+- Generar migraciones localmente: `npx prisma migrate dev --name nombre`
+- Hacer commit y push de la carpeta `migrations/`
+
+### Prisma OpenSSL error en Docker
+- Usar `node:20-slim` en vez de `node:20-alpine`
+- Instalar OpenSSL: `RUN apt-get update -y && apt-get install -y openssl`
+
+### npm ci falla en Docker
+- Asegurar que `package-lock.json` está en el repo (no en `.gitignore`)
+- Generar: `npm install --package-lock-only`
 
 ---
 

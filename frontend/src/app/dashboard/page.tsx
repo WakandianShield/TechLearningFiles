@@ -34,57 +34,57 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in-up">
       {/* Welcome */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold gradient-text">
           ¡Hola, {session?.user?.name}! 👋
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className="text-gray-400 mt-1">
           Bienvenido a tu journey académico. Aquí puedes ver un resumen de tus proyectos.
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="card p-5">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-100 p-2.5 rounded-lg">
-              <FolderOpen className="h-5 w-5 text-blue-600" />
+        <div className="stat-card">
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
+              <FolderOpen className="h-5 w-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats?.projectCount || 0}</p>
-              <p className="text-sm text-gray-600">Proyectos</p>
+              <p className="text-2xl font-bold text-gray-100">{stats?.projectCount || 0}</p>
+              <p className="text-sm text-gray-400">Proyectos</p>
             </div>
           </div>
         </div>
-        <div className="card p-5">
-          <div className="flex items-center gap-3">
-            <div className="bg-green-100 p-2.5 rounded-lg">
-              <FileIcon className="h-5 w-5 text-green-600" />
+        <div className="stat-card">
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="p-2.5 rounded-xl bg-accent-green/10 border border-accent-green/20">
+              <FileIcon className="h-5 w-5 text-accent-green" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats?.fileCount || 0}</p>
-              <p className="text-sm text-gray-600">Archivos</p>
+              <p className="text-2xl font-bold text-gray-100">{stats?.fileCount || 0}</p>
+              <p className="text-sm text-gray-400">Archivos</p>
             </div>
           </div>
         </div>
-        <div className="card p-5">
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-100 p-2.5 rounded-lg">
-              <BarChart3 className="h-5 w-5 text-purple-600" />
+        <div className="stat-card">
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="p-2.5 rounded-xl bg-accent-purple/10 border border-accent-purple/20">
+              <BarChart3 className="h-5 w-5 text-accent-purple" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-gray-100">
                 {stats?.categories?.length || 0}
               </p>
-              <p className="text-sm text-gray-600">Categorías</p>
+              <p className="text-sm text-gray-400">Categorías</p>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
       {/* Recent projects */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Proyectos Recientes</h2>
+          <h2 className="text-xl font-semibold text-gray-100">Proyectos Recientes</h2>
           <Link href="/dashboard/projects/new" className="btn-primary flex items-center gap-2 text-sm">
             <Plus className="h-4 w-4" />
             Nuevo Proyecto
@@ -102,9 +102,9 @@ export default function DashboardPage() {
 
         {projects.length === 0 ? (
           <div className="card p-12 text-center">
-            <FolderOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No hay proyectos aún</h3>
-            <p className="text-gray-600 mt-1 mb-4">
+            <FolderOpen className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-200">No hay proyectos aún</h3>
+            <p className="text-gray-500 mt-1 mb-4">
               Comienza creando tu primer proyecto académico.
             </p>
             <Link href="/dashboard/projects/new" className="btn-primary inline-flex items-center gap-2">

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProject } from '@/lib/api';
 import { sanitizeText } from '@/lib/sanitize';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Globe, Lock } from 'lucide-react';
 import { getCategoryLabel } from '@/lib/utils';
 
 const CATEGORIES = ['PROGRAMMING', 'MATH', 'SCIENCE', 'DESIGN', 'WRITING', 'RESEARCH', 'PRESENTATION', 'LAB', 'OTHER'];
@@ -20,6 +20,7 @@ export default function NewProjectPage() {
     tags: '',
     semester: '',
     subject: '',
+    visibility: 'PUBLIC',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -44,6 +45,7 @@ export default function NewProjectPage() {
         tags: tagsArray,
         semester: sanitizeText(form.semester).trim() || undefined,
         subject: sanitizeText(form.subject).trim() || undefined,
+        visibility: form.visibility,
       });
 
       router.push(`/dashboard/projects/${res.data.id}`);
@@ -56,19 +58,19 @@ export default function NewProjectPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Nuevo Proyecto</h1>
+    <div className="max-w-2xl mx-auto animate-fade-in-up">
+      <h1 className="text-2xl font-bold gradient-text mb-6">Nuevo Proyecto</h1>
 
       <div className="card p-6">
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+          <div className="mb-4 p-3 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-sm">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Título del proyecto *
             </label>
             <input
@@ -83,7 +85,7 @@ export default function NewProjectPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Descripción
             </label>
             <textarea
@@ -98,7 +100,7 @@ export default function NewProjectPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Categoría
               </label>
               <select
@@ -114,7 +116,7 @@ export default function NewProjectPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Semestre
               </label>
               <input
@@ -129,7 +131,7 @@ export default function NewProjectPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Materia / Asignatura
             </label>
             <input
@@ -143,7 +145,7 @@ export default function NewProjectPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Tags (separados por coma)
             </label>
             <input
@@ -154,6 +156,44 @@ export default function NewProjectPage() {
               value={form.tags}
               onChange={handleChange}
             />
+          </div>
+
+          {/* Visibility selector */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Visibilidad
+            </label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, visibility: 'PUBLIC' })}
+                className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border transition-all duration-200 ${
+                  form.visibility === 'PUBLIC'
+                    ? 'bg-accent-green/10 border-accent-green/40 text-accent-green'
+                    : 'bg-dark-800/50 border-white/10 text-gray-400 hover:border-white/20'
+                }`}
+              >
+                <Globe className="h-4 w-4" />
+                <span className="text-sm font-medium">Público</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, visibility: 'PRIVATE' })}
+                className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border transition-all duration-200 ${
+                  form.visibility === 'PRIVATE'
+                    ? 'bg-gray-500/10 border-gray-400/40 text-gray-300'
+                    : 'bg-dark-800/50 border-white/10 text-gray-400 hover:border-white/20'
+                }`}
+              >
+                <Lock className="h-4 w-4" />
+                <span className="text-sm font-medium">Privado</span>
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-1.5">
+              {form.visibility === 'PUBLIC'
+                ? 'Cualquier persona podrá ver este proyecto en Explorar.'
+                : 'Solo tú podrás ver este proyecto.'}
+            </p>
           </div>
 
           <div className="flex gap-3 pt-2">

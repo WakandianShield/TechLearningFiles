@@ -125,4 +125,19 @@ export class FilesService {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async renameFile(fileId: string, authorId: string, displayName: string) {
+    const file = await this.prisma.projectFile.findUnique({
+      where: { id: fileId },
+      include: { project: true },
+    });
+
+    if (!file) throw new NotFoundException('File not found');
+    if (file.project.authorId !== authorId) throw new ForbiddenException('Access denied');
+
+    return this.prisma.projectFile.update({
+      where: { id: fileId },
+      data: { displayName },
+    });
+  }
 }

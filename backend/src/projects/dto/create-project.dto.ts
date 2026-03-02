@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsEnum, IsArray, MaxLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ProjectCategory } from '@prisma/client';
+import { ProjectCategory, ProjectVisibility } from '@prisma/client';
 
 export class CreateProjectDto {
   @ApiProperty({ example: 'Data Structures Final Project' })
@@ -36,4 +36,9 @@ export class CreateProjectDto {
   @IsString()
   @MaxLength(200)
   subject?: string;
+
+  @ApiPropertyOptional({ enum: ProjectVisibility, default: 'PUBLIC' })
+  @IsOptional()
+  @IsEnum(ProjectVisibility)
+  visibility?: ProjectVisibility;
 }

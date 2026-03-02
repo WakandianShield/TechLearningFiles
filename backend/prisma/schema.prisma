@@ -8,14 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  avatar    String?
-  bio       String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  password    String
+  avatar      String?
+  banner      String?
+  bio         String?
+  website     String?
+  socialLinks Json?    // { github, linkedin, twitter, etc. }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   projects Project[]
 
@@ -23,18 +26,19 @@ model User {
 }
 
 model Project {
-  id          String        @id @default(cuid())
+  id          String           @id @default(cuid())
   title       String
-  slug        String        @unique
+  slug        String           @unique
   description String?
-  category    ProjectCategory @default(OTHER)
-  tags        String[]      @default([])
+  category    ProjectCategory  @default(OTHER)
+  visibility  ProjectVisibility @default(PUBLIC)
+  tags        String[]         @default([])
   semester    String?
   subject     String?
   coverImage  String?
-  pinned      Boolean       @default(false)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  pinned      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String
@@ -44,12 +48,14 @@ model Project {
   @@index([slug])
   @@index([authorId])
   @@index([category])
+  @@index([visibility])
   @@map("projects")
 }
 
 model ProjectFile {
   id           String   @id @default(cuid())
   originalName String
+  displayName  String?
   fileName     String
   filePath     String
   mimeType     String
@@ -76,6 +82,11 @@ enum ProjectCategory {
   PRESENTATION
   LAB
   OTHER
+}
+
+enum ProjectVisibility {
+  PUBLIC
+  PRIVATE
 }
 
 enum FileType {

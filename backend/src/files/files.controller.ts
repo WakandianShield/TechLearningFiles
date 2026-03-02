@@ -1,5 +1,5 @@
 import {
-  Controller, Post, Get, Delete, Param, Query,
+  Controller, Post, Get, Delete, Patch, Param, Query,
   UseGuards, UseInterceptors, UploadedFiles,
   Request, Body,
 } from '@nestjs/common';
@@ -58,6 +58,16 @@ export class FilesController {
   @ApiOperation({ summary: 'Get file details by ID' })
   getFile(@Request() req: any, @Param('id') id: string) {
     return this.filesService.getFile(id, req.user.id);
+  }
+
+  @Patch(':id/rename')
+  @ApiOperation({ summary: 'Rename a file (set display name)' })
+  renameFile(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body('displayName') displayName: string,
+  ) {
+    return this.filesService.renameFile(id, req.user.id, displayName);
   }
 
   @Delete(':id')

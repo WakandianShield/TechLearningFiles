@@ -117,4 +117,41 @@ export class ProjectsService {
 
     return { projectCount, fileCount, categories };
   }
+
+  async explore(category?: string, search?: string) {
+    const where: any = { visibility: 'PUBLIC' };
+    if (category) where.category = category;
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { subject: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    return this.prisma.project.findMany({
+      where,
+      include: {
+        _count: { select: { files: true } },
+        author: { select: { id: true, name: true, avatar: true } },
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      take: 50,
+    });
+  }
+
+  async findOnePublic(id: string) {
+    const project = await this.prisma.project.findUnique({
+      where: { id },
+      include: {
+        files: { orderBy: { createdAt: 'desc' } },
+        author: { select: { id: true, name: true, email: true, avatar: true } },
+      },
+    });
+
+    if (!project) throw new NotFoundException('Project not found');
+    if (project.visibility !== 'PUBLIC') throw new NotFoundException('Project not found');
+
+    return project;
+  }
 }

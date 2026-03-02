@@ -38,9 +38,9 @@ export default function ProjectsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in-up">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Mis Proyectos</h1>
+        <h1 className="text-2xl font-bold gradient-text">Mis Proyectos</h1>
         <Link href="/dashboard/projects/new" className="btn-primary flex items-center gap-2 text-sm">
           <Plus className="h-4 w-4" />
           Nuevo Proyecto
@@ -50,7 +50,7 @@ export default function ProjectsPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           <input
             type="text"
             className="input pl-10"
@@ -60,7 +60,7 @@ export default function ProjectsPage() {
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           <select
             className="input pl-10 pr-8 appearance-none"
             value={selectedCategory}
@@ -77,11 +77,11 @@ export default function ProjectsPage() {
       {/* Project grid */}
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
         </div>
       ) : filteredProjects.length === 0 ? (
         <div className="card p-12 text-center">
-          <p className="text-gray-600">
+          <p className="text-gray-400">
             {search || selectedCategory
               ? 'No se encontraron proyectos con esos filtros.'
               : 'No tienes proyectos aún. ¡Crea el primero!'}

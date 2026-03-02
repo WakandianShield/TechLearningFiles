@@ -55,19 +55,19 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
       {/* Dropzone */}
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+        className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 ${
           isDragActive
-            ? 'border-primary-400 bg-primary-50'
-            : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
+            ? 'border-accent-cyan bg-accent-cyan/5'
+            : 'border-gray-700 hover:border-accent-cyan/50 hover:bg-white/[0.02]'
         }`}
       >
         <input {...getInputProps()} />
-        <Upload className="h-10 w-10 text-gray-400 mx-auto mb-3" />
+        <Upload className="h-10 w-10 text-gray-500 mx-auto mb-3" />
         {isDragActive ? (
-          <p className="text-primary-600 font-medium">Suelta los archivos aquí...</p>
+          <p className="text-accent-cyan font-medium">Suelta los archivos aquí...</p>
         ) : (
           <>
-            <p className="text-gray-700 font-medium">
+            <p className="text-gray-300 font-medium">
               Arrastra archivos aquí o haz clic para seleccionar
             </p>
             <p className="text-sm text-gray-500 mt-1">
@@ -80,25 +80,26 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
       {/* File list */}
       {selectedFiles.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">
+          <h4 className="text-sm font-medium text-gray-300">
             Archivos seleccionados ({selectedFiles.length})
           </h4>
           <div className="max-h-48 overflow-y-auto space-y-1">
             {selectedFiles.map((file, index) => (
               <div
                 key={`${file.name}-${index}`}
-                className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2"
+                className="flex items-center justify-between rounded-lg px-3 py-2"
+                style={{ background: 'rgba(15, 15, 15, 0.6)', border: '1px solid rgba(100, 255, 218, 0.06)' }}
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <FileIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                  <span className="text-sm text-gray-700 truncate">{file.name}</span>
+                  <span className="text-sm text-gray-300 truncate">{file.name}</span>
                   <span className="text-xs text-gray-500 flex-shrink-0">
                     {formatFileSize(file.size)}
                   </span>
                 </div>
                 <button
                   onClick={() => removeFile(index)}
-                  className="text-gray-400 hover:text-red-500 flex-shrink-0 ml-2"
+                  className="text-gray-500 hover:text-accent-red flex-shrink-0 ml-2"
                 >
                   <X className="h-4 w-4" />
                 </button>
