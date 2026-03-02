@@ -174,8 +174,8 @@ Edita `backend/.env` con tus valores:
 # Si usas PostgreSQL local:
 DATABASE_URL="postgresql://postgres:tu-password@localhost:5432/techlearning"
 
-# Si usas la DB de Railway (URL pública):
-DATABASE_URL="postgresql://postgres:fwtKGAaPLuNSxrSeTsyNprFNDTylLsAo@interchange.proxy.rlwy.net:24722/railway"
+# Si usas Railway, copia la URL desde Railway Dashboard > Variables:
+# DATABASE_URL se configura automáticamente en Railway
 
 JWT_SECRET="una-clave-secreta-cualquiera"
 JWT_EXPIRATION="7d"
@@ -266,7 +266,7 @@ cd frontend && npm run lint
 
 | Variable | Descripción | Local | Producción |
 |---|---|---|---|
-| `DATABASE_URL` | URL de PostgreSQL | `postgresql://postgres:pass@localhost:5432/techlearning` | `postgresql://...@postgres.railway.internal:5432/railway` |
+| `DATABASE_URL` | URL de PostgreSQL | `postgresql://postgres:pass@localhost:5432/techlearning` | (se inyecta automáticamente desde Railway) |
 | `JWT_SECRET` | Clave secreta para JWT | cualquier string | string seguro y aleatorio |
 | `JWT_EXPIRATION` | Expiración del token | `7d` | `7d` |
 | `PORT` | Puerto del servidor | `4000` | `4000` |
