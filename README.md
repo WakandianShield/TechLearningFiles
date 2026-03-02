@@ -1,15 +1,19 @@
-# TechLearning - Academic Files Journey
+<h1 align="center">TechLearning - Academic Files Journey</h1>
 
-> Plataforma web fullstack para organizar, subir y gestionar proyectos academicos. Tema oscuro neon con estetica cyberpunk. Soporte para PDFs, documentos, videos, imagenes, codigo y cualquier tipo de archivo.
+<p align="center">
+  <img src="https://img.shields.io/badge/NestJS-E0234E?logo=nestjs&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/Railway-0B0D0E?logo=railway&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=plastic" />
+  <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?logo=tailwindcss&logoColor=white&style=plastic" />
+</p>
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
-![NestJS](https://img.shields.io/badge/NestJS-10-red?logo=nestjs)
-![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?logo=prisma)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwindcss)
-![Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?logo=railway)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
-![Docker](https://img.shields.io/badge/Docker-Multi--stage-2496ED?logo=docker)
+<p align="center">
+Plataforma web fullstack para organizar, subir y gestionar proyectos academicos. Tema oscuro neon con estetica cyberpunk. Soporte para PDFs, documentos, videos, imagenes, codigo y cualquier tipo de archivo.
+</p>
 
 ### Links de Produccion
 
