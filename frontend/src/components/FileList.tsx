@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import {
-  Trash2, Download, ExternalLink, Pencil, Check, X, Search,
+  Trash2, Download, Eye, Pencil, Check, X, Search,
   FileText, Image, Video, Music, Code2, Table2, Archive, Presentation, File, MoreVertical,
 } from 'lucide-react';
 import { formatFileSize, getFileIcon } from '@/lib/utils';
@@ -10,6 +10,7 @@ import { deleteFile, renameFile } from '@/lib/api';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { sanitizeText } from '@/lib/sanitize';
+import FilePreview from './FilePreview';
 
 interface ProjectFile {
   id: string;
@@ -66,6 +67,7 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
   const [filterType, setFilterType] = useState('ALL');
   const [sortBy, setSortBy] = useState<SortBy>('date');
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<ProjectFile | null>(null);
 
   const handleDelete = async (fileId: string) => {
     if (!confirm('Estas seguro de eliminar este archivo?')) return;
@@ -179,11 +181,12 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
               onClick={() => setMenuOpen(null)}
             >
               {/* Thumbnail / Icon area */}
-              <a
-                href={`${backendUrl}${file.filePath}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
+              <div
+                className="block cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPreviewFile(file);
+                }}
               >
                 <div className={`h-32 flex items-center justify-center relative ${iconConfig.bg}`}>
                   {isImage ? (
@@ -198,10 +201,10 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
                   )}
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <ExternalLink className="h-6 w-6 text-white drop-shadow-lg" />
+                    <Eye className="h-6 w-6 text-white drop-shadow-lg" />
                   </div>
                 </div>
-              </a>
+              </div>
 
               {/* File info */}
               <div className="p-3">
@@ -299,6 +302,15 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
           );
         })}
       </div>
+
+      {/* File Preview Modal */}
+      {previewFile && (
+        <FilePreview
+          file={previewFile}
+          fileUrl={`${backendUrl}${previewFile.filePath}`}
+          onClose={() => setPreviewFile(null)}
+        />
+      )}
     </div>
   );
 }
