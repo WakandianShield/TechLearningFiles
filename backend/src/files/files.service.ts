@@ -101,7 +101,8 @@ export class FilesService {
     if (file.project.authorId !== authorId) throw new ForbiddenException('Access denied');
 
     // Delete physical file
-    const fullPath = path.join(process.cwd(), 'uploads', file.fileName);
+    const uploadDir = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads');
+    const fullPath = path.join(uploadDir, file.fileName);
     if (fs.existsSync(fullPath)) {
       fs.unlinkSync(fullPath);
     }

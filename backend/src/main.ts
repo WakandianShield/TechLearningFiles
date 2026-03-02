@@ -30,7 +30,8 @@ async function bootstrap() {
   });
 
   // Serve uploaded files statically
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+  const uploadDir = process.env.UPLOAD_DIR || join(__dirname, '..', 'uploads');
+  app.useStaticAssets(uploadDir, {
     prefix: '/uploads/',
   });
 
