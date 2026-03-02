@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Trash2, Download, ExternalLink, Pencil, Check, X, Search, Filter } from 'lucide-react';
+import {
+  Trash2, Download, ExternalLink, Pencil, Check, X, Search,
+  FileText, Image, Video, Music, Code2, Table2, Archive, Presentation, File, MoreVertical,
+} from 'lucide-react';
 import { formatFileSize, getFileIcon } from '@/lib/utils';
 import { deleteFile, renameFile } from '@/lib/api';
 import { format } from 'date-fns';
@@ -30,12 +33,31 @@ interface FileListProps {
 
 const FILE_TYPES = ['ALL', 'PDF', 'DOCUMENT', 'IMAGE', 'VIDEO', 'AUDIO', 'CODE', 'SPREADSHEET', 'ARCHIVE', 'OTHER'];
 const FILE_TYPE_LABELS: Record<string, string> = {
-  ALL: 'Todos', PDF: 'PDF', DOCUMENT: 'Documentos', IMAGE: 'Imágenes',
-  VIDEO: 'Videos', AUDIO: 'Audio', CODE: 'Código', SPREADSHEET: 'Hojas',
+  ALL: 'Todos', PDF: 'PDF', DOCUMENT: 'Documentos', IMAGE: 'Imagenes',
+  VIDEO: 'Videos', AUDIO: 'Audio', CODE: 'Codigo', SPREADSHEET: 'Hojas',
   ARCHIVE: 'Archivos', OTHER: 'Otros',
 };
 
 type SortBy = 'date' | 'name' | 'size' | 'type';
+
+const FILE_ICON_MAP: Record<string, { icon: any; color: string; bg: string }> = {
+  pdf: { icon: FileText, color: 'text-red-400', bg: 'bg-red-500/10' },
+  image: { icon: Image, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+  video: { icon: Video, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  audio: { icon: Music, color: 'text-pink-400', bg: 'bg-pink-500/10' },
+  document: { icon: FileText, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  spreadsheet: { icon: Table2, color: 'text-green-400', bg: 'bg-green-500/10' },
+  archive: { icon: Archive, color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+  presentation: { icon: Presentation, color: 'text-orange-400', bg: 'bg-orange-500/10' },
+  file: { icon: File, color: 'text-gray-400', bg: 'bg-gray-500/10' },
+};
+
+function FileIcon({ mimeType, className }: { mimeType: string; className?: string }) {
+  const key = getFileIcon(mimeType);
+  const config = FILE_ICON_MAP[key] || FILE_ICON_MAP.file;
+  const Icon = config.icon;
+  return <Icon className={`${config.color} ${className || 'h-8 w-8'}`} />;
+}
 
 export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: FileListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -43,9 +65,10 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('ALL');
   const [sortBy, setSortBy] = useState<SortBy>('date');
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   const handleDelete = async (fileId: string) => {
-    if (!confirm('¿Estás seguro de eliminar este archivo?')) return;
+    if (!confirm('Estas seguro de eliminar este archivo?')) return;
     try {
       await deleteFile(fileId);
       onFileDeleted();
@@ -57,6 +80,7 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
   const startRename = (file: ProjectFile) => {
     setEditingId(file.id);
     setEditName(file.displayName || file.originalName);
+    setMenuOpen(null);
   };
 
   const handleRename = async (fileId: string) => {
@@ -64,7 +88,7 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
     try {
       await renameFile(fileId, editName.trim());
       setEditingId(null);
-      onFileDeleted(); // refresh
+      onFileDeleted();
     } catch (error) {
       alert('Error al renombrar');
     }
@@ -89,8 +113,9 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
 
   if (files.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <p>No hay archivos aún. Sube tu primer archivo.</p>
+      <div className="text-center py-12">
+        <File className="h-12 w-12 text-gray-600 mx-auto mb-3" />
+        <p className="text-gray-500">No hay archivos aun. Sube tu primer archivo.</p>
       </div>
     );
   }
@@ -128,7 +153,7 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
           >
             <option value="date">Fecha</option>
             <option value="name">Nombre</option>
-            <option value="size">Tamaño</option>
+            <option value="size">Tamano</option>
             <option value="type">Tipo</option>
           </select>
         </div>
@@ -136,95 +161,143 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
 
       <p className="text-xs text-gray-500">{filtered.length} de {files.length} archivos</p>
 
-      {/* Files */}
-      <div className="space-y-2">
-        {filtered.map((file) => (
-          <div
-            key={file.id}
-            className="flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-300 group animate-slide-in"
-            style={{
-              background: 'rgba(15, 15, 15, 0.6)',
-              border: '1px solid rgba(100, 255, 218, 0.06)',
-            }}
-          >
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <span className="text-2xl">{getFileIcon(file.mimeType)}</span>
-              <div className="min-w-0 flex-1">
-                {editingId === file.id ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      className="input text-sm py-1 px-2"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleRename(file.id)}
-                      autoFocus
-                    />
-                    <button onClick={() => handleRename(file.id)} className="p-1 text-accent-green hover:text-green-400">
-                      <Check className="h-4 w-4" />
-                    </button>
-                    <button onClick={() => setEditingId(null)} className="p-1 text-gray-500 hover:text-gray-300">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <p className="text-sm font-medium text-gray-200 truncate">
-                    {sanitizeText(file.displayName || file.originalName)}
-                  </p>
-                )}
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <span>{formatFileSize(file.size)}</span>
-                  <span className="text-accent-cyan/40">•</span>
-                  <span>{file.fileType}</span>
-                  <span className="text-accent-cyan/40">•</span>
-                  <span>{format(new Date(file.createdAt), "d MMM yyyy", { locale: es })}</span>
-                </div>
-                {file.description && (
-                  <p className="text-xs text-gray-500 mt-0.5 truncate">
-                    {sanitizeText(file.description)}
-                  </p>
-                )}
-              </div>
-            </div>
+      {/* Grid view */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        {filtered.map((file) => {
+          const isImage = file.mimeType.startsWith('image/');
+          const key = getFileIcon(file.mimeType);
+          const iconConfig = FILE_ICON_MAP[key] || FILE_ICON_MAP.file;
 
-            <div className="flex items-center gap-1 ml-3 opacity-60 group-hover:opacity-100 transition-opacity">
-              {!readOnly && (
-                <button
-                  onClick={() => startRename(file)}
-                  className="p-2 text-gray-500 hover:text-accent-cyan rounded-lg hover:bg-white/5 transition-colors"
-                  title="Renombrar"
-                >
-                  <Pencil className="h-4 w-4" />
-                </button>
-              )}
+          return (
+            <div
+              key={file.id}
+              className="group relative rounded-xl overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-accent-cyan/5"
+              style={{
+                background: 'linear-gradient(135deg, rgba(25, 25, 25, 0.9), rgba(18, 18, 18, 0.95))',
+                border: '1px solid rgba(100, 255, 218, 0.06)',
+              }}
+              onClick={() => setMenuOpen(null)}
+            >
+              {/* Thumbnail / Icon area */}
               <a
                 href={`${backendUrl}${file.filePath}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-gray-500 hover:text-accent-cyan rounded-lg hover:bg-white/5 transition-colors"
-                title="Ver archivo"
+                className="block"
               >
-                <ExternalLink className="h-4 w-4" />
+                <div className={`h-32 flex items-center justify-center relative ${iconConfig.bg}`}>
+                  {isImage ? (
+                    <img
+                      src={`${backendUrl}${file.filePath}`}
+                      alt={file.displayName || file.originalName}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <FileIcon mimeType={file.mimeType} className="h-12 w-12" />
+                  )}
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <ExternalLink className="h-6 w-6 text-white drop-shadow-lg" />
+                  </div>
+                </div>
               </a>
-              <a
-                href={`${backendUrl}${file.filePath}`}
-                download={file.displayName || file.originalName}
-                className="p-2 text-gray-500 hover:text-accent-green rounded-lg hover:bg-white/5 transition-colors"
-                title="Descargar"
-              >
-                <Download className="h-4 w-4" />
-              </a>
+
+              {/* File info */}
+              <div className="p-3">
+                {editingId === file.id ? (
+                  <div className="flex items-center gap-1">
+                    <input
+                      className="input text-xs py-1 px-2 flex-1 min-w-0"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleRename(file.id);
+                        if (e.key === 'Escape') setEditingId(null);
+                      }}
+                      autoFocus
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <button onClick={(e) => { e.stopPropagation(); handleRename(file.id); }} className="p-1 text-accent-green hover:text-green-400">
+                      <Check className="h-3.5 w-3.5" />
+                    </button>
+                    <button onClick={(e) => { e.stopPropagation(); setEditingId(null); }} className="p-1 text-gray-500 hover:text-gray-300">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-xs font-medium text-gray-200 truncate" title={file.displayName || file.originalName}>
+                    {sanitizeText(file.displayName || file.originalName)}
+                  </p>
+                )}
+                <div className="flex items-center gap-1.5 mt-1 text-[10px] text-gray-500">
+                  <span>{formatFileSize(file.size)}</span>
+                  <span className="text-accent-cyan/30">|</span>
+                  <span>{format(new Date(file.createdAt), "d MMM", { locale: es })}</span>
+                </div>
+              </div>
+
+              {/* Actions menu */}
               {!readOnly && (
-                <button
-                  onClick={() => handleDelete(file.id)}
-                  className="p-2 text-gray-500 hover:text-accent-red rounded-lg hover:bg-white/5 transition-colors"
-                  title="Eliminar"
+                <div className="absolute top-2 right-2 z-10">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuOpen(menuOpen === file.id ? null : file.id);
+                    }}
+                    className="p-1.5 rounded-lg bg-dark-900/70 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-white hover:bg-dark-900/90 transition-all backdrop-blur-sm"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+
+                  {menuOpen === file.id && (
+                    <div
+                      className="absolute right-0 top-9 w-40 rounded-lg py-1.5 shadow-xl z-20"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.98), rgba(20, 20, 20, 0.98))',
+                        border: '1px solid rgba(100, 255, 218, 0.15)',
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={() => startRename(file)}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-accent-cyan hover:bg-white/5 transition-colors"
+                      >
+                        <Pencil className="h-3.5 w-3.5" /> Renombrar
+                      </button>
+                      <a
+                        href={`${backendUrl}${file.filePath}`}
+                        download={file.displayName || file.originalName}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-accent-green hover:bg-white/5 transition-colors"
+                        onClick={() => setMenuOpen(null)}
+                      >
+                        <Download className="h-3.5 w-3.5" /> Descargar
+                      </a>
+                      <button
+                        onClick={() => { setMenuOpen(null); handleDelete(file.id); }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-accent-red hover:bg-white/5 transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Eliminar
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Read-only download */}
+              {readOnly && (
+                <a
+                  href={`${backendUrl}${file.filePath}`}
+                  download={file.displayName || file.originalName}
+                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-dark-900/70 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-accent-green hover:bg-dark-900/90 transition-all backdrop-blur-sm"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                  <Download className="h-4 w-4" />
+                </a>
               )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

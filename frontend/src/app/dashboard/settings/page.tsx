@@ -124,7 +124,7 @@ export default function SettingsPage() {
         <div className="relative group">
           <div
             className="h-44 bg-gradient-to-r from-accent-cyan/20 via-accent-purple/20 to-accent-blue/20 relative"
-            style={profile?.banner ? { backgroundImage: `url(${API_URL}/users/banner/${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+            style={profile?.banner ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
           >
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <button
@@ -144,7 +144,7 @@ export default function SettingsPage() {
           <div className="relative inline-block group/avatar">
             <div className="w-24 h-24 rounded-full bg-dark-700 border-4 border-dark-900 flex items-center justify-center overflow-hidden shadow-lg">
               {profile?.avatar ? (
-                <img src={`${API_URL}/users/avatar/${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
+                <img src={`${API_URL.replace('/api', '')}${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <User className="h-10 w-10 text-gray-400" />
               )}

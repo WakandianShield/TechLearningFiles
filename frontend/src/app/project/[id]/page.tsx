@@ -86,7 +86,7 @@ export default function PublicProjectPage() {
           >
             <div className="w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center overflow-hidden">
               {project.author.avatar ? (
-                <img src={`${API_URL}/users/avatar/${project.author.avatar}`} alt="" className="w-full h-full object-cover" />
+                <img src={`${API_URL.replace('/api', '')}${project.author.avatar}`} alt="" className="w-full h-full object-cover" />
               ) : (
                 <User className="h-4 w-4 text-gray-500" />
               )}

@@ -96,7 +96,7 @@ export default function ProjectDetailPage() {
               </span>
               {project.pinned && (
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-accent-yellow/10 text-accent-yellow border border-accent-yellow/20">
-                  📌 Fijado
+                  Fijado
                 </span>
               )}
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -104,7 +104,7 @@ export default function ProjectDetailPage() {
                   ? 'bg-accent-green/10 text-accent-green border border-accent-green/20'
                   : 'bg-gray-500/10 text-gray-400 border border-gray-500/20'
               }`}>
-                {project.visibility === 'PUBLIC' ? '🌐 Público' : '🔒 Privado'}
+                {project.visibility === 'PUBLIC' ? 'Público' : 'Privado'}
               </span>
             </div>
             <h1 className="text-2xl font-bold text-gray-100">{sanitizeText(project.title)}</h1>

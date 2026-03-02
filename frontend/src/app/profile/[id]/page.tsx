@@ -80,7 +80,7 @@ export default function PublicProfilePage() {
       <div className="card overflow-hidden">
         <div
           className="h-48 bg-gradient-to-r from-accent-cyan/20 via-accent-purple/20 to-accent-blue/20 relative"
-          style={profile.banner ? { backgroundImage: `url(${API_URL}/users/banner/${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+          style={profile.banner ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent" />
         </div>
@@ -88,7 +88,7 @@ export default function PublicProfilePage() {
           <div className="flex flex-col sm:flex-row sm:items-end gap-4">
             <div className="w-28 h-28 rounded-full bg-dark-700 border-4 border-dark-900 flex items-center justify-center overflow-hidden shadow-lg">
               {profile.avatar ? (
-                <img src={`${API_URL}/users/avatar/${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
+                <img src={`${API_URL.replace('/api', '')}${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <User className="h-12 w-12 text-gray-400" />
               )}

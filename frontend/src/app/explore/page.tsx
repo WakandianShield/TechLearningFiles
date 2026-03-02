@@ -177,7 +177,7 @@ export default function ExplorePage() {
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-full bg-dark-700 flex items-center justify-center overflow-hidden border border-white/10">
                         {user.avatar ? (
-                          <img src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/users/avatar/${user.avatar}`} alt="" className="w-full h-full object-cover" />
+                          <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api').replace('/api', '')}${user.avatar}`} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <Users className="h-5 w-5 text-gray-500" />
                         )}
