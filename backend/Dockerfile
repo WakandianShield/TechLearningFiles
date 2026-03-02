@@ -27,4 +27,4 @@ ENV UPLOAD_DIR=/data/uploads
 RUN mkdir -p /data/uploads
 
 EXPOSE 4000
-CMD ["sh", "-c", "mkdir -p ${UPLOAD_DIR} && echo 'Starting app...' && (npx prisma migrate deploy 2>&1 || echo 'Migration skipped') && echo 'Starting Node server...' && node dist/main"]
+CMD ["sh", "-c", "mkdir -p ${UPLOAD_DIR} && echo '[BOOT] Upload dir: ${UPLOAD_DIR}' && echo '[BOOT] Running prisma migrate deploy (no shadow DB)...' && (npx prisma migrate deploy 2>&1 || echo '[BOOT] Migration skipped') && echo '[BOOT] Starting Node server...' && node dist/main"]

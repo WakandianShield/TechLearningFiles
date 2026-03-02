@@ -24,7 +24,7 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    maxSize: 100 * 1024 * 1024, // 100MB
+    maxSize: 1024 * 1024 * 1024, // 1GB
     maxFiles: 20,
   });
 

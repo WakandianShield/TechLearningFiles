@@ -27,7 +27,7 @@ import { FilesController } from './files.controller';
         }),
         limits: {
           fileSize: parseInt(
-            configService.get('MAX_FILE_SIZE', '104857600'), // 100MB
+            configService.get('MAX_FILE_SIZE', '1073741824'), // 1GB
             10,
           ),
         },

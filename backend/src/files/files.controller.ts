@@ -21,7 +21,7 @@ export class FilesController {
   @Post('upload/:projectId')
   @UseInterceptors(FilesInterceptor('files', 20))
   @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'Upload files to a project (max 20 files, 100MB each)' })
+  @ApiOperation({ summary: 'Upload files to a project (max 20 files, 1GB each)' })
   @ApiBody({
     schema: {
       type: 'object',
