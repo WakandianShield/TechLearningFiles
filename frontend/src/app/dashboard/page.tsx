@@ -44,10 +44,10 @@ export default function DashboardPage() {
       {/* Welcome */}
       <div>
         <h1 className="text-3xl font-bold gradient-text">
-          ¡Hola, {session?.user?.name}! 👋
+          Hola, {session?.user?.name}
         </h1>
         <p className="text-gray-400 mt-1">
-          Bienvenido a tu journey académico. Aquí puedes ver un resumen de tus proyectos.
+          Bienvenido a tu journey academico. Aqui puedes ver un resumen de tus proyectos.
         </p>
       </div>
 

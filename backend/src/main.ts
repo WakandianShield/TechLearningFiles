@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -29,8 +30,15 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Serve uploaded files statically
+  // Ensure upload directory exists (persistent volume on Railway)
   const uploadDir = process.env.UPLOAD_DIR || join(__dirname, '..', 'uploads');
+  if (!existsSync(uploadDir)) {
+    mkdirSync(uploadDir, { recursive: true });
+    console.log(`[UPLOADS] Created upload directory: ${uploadDir}`);
+  } else {
+    console.log(`[UPLOADS] Upload directory ready: ${uploadDir}`);
+  }
+
   app.useStaticAssets(uploadDir, {
     prefix: '/uploads/',
   });
@@ -61,11 +69,11 @@ async function bootstrap() {
   console.log(`DATABASE_URL set: ${!!process.env.DATABASE_URL}`);
   console.log(`JWT_SECRET set: ${!!process.env.JWT_SECRET}`);
   await app.listen(port, '0.0.0.0');
-  console.log(`🚀 Backend running on port ${port}`);
-  console.log(`📚 API Docs: http://localhost:${port}/api/docs`);
+  console.log(`[OK] Backend running on port ${port}`);
+  console.log(`[DOCS] API Docs: http://localhost:${port}/api/docs`);
 }
 
 bootstrap().catch((err) => {
-  console.error('❌ Failed to start application:', err);
+  console.error('[ERROR] Failed to start application:', err);
   process.exit(1);
 });

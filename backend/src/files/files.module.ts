@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 import { FilesService } from './files.service';
 import { FilesController } from './files.controller';
 
@@ -11,9 +12,14 @@ import { FilesController } from './files.controller';
   imports: [
     MulterModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => {
+        const uploadDir = configService.get('UPLOAD_DIR', './uploads');
+        if (!existsSync(uploadDir)) {
+          mkdirSync(uploadDir, { recursive: true });
+        }
+        return {
         storage: diskStorage({
-          destination: configService.get('UPLOAD_DIR', './uploads'),
+          destination: uploadDir,
           filename: (_req, file, cb) => {
             const uniqueName = `${uuidv4()}${extname(file.originalname)}`;
             cb(null, uniqueName);
@@ -25,7 +31,8 @@ import { FilesController } from './files.controller';
             10,
           ),
         },
-      }),
+      };
+      },
       inject: [ConfigService],
     }),
   ],
