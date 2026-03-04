@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { OAuthLoginDto } from './dto/oauth-login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('Auth')
@@ -20,6 +21,12 @@ export class AuthController {
   @ApiOperation({ summary: 'Login with email and password' })
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Post('oauth')
+  @ApiOperation({ summary: 'Login or register via OAuth provider' })
+  oauthLogin(@Body() dto: OAuthLoginDto) {
+    return this.authService.oauthLogin(dto);
   }
 
   @Get('me')

@@ -9,6 +9,16 @@ export class UsersService {
     return this.prisma.user.create({ data });
   }
 
+  async createOAuth(data: {
+    name: string;
+    email: string;
+    provider: string;
+    providerAccountId: string;
+    avatar?: string;
+  }) {
+    return this.prisma.user.create({ data });
+  }
+
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
   }

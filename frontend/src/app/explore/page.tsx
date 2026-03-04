@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { exploreProjects, searchUsers } from '@/lib/api';
 import ProjectCard from '@/components/ProjectCard';
 import { getCategoryLabel } from '@/lib/utils';
-import { Search, Filter, Users, FolderOpen, Sparkles } from 'lucide-react';
+import { Search, Users, FolderOpen, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 const CATEGORIES = ['ALL', 'PROGRAMMING', 'MATH', 'SCIENCE', 'DESIGN', 'WRITING', 'RESEARCH', 'PRESENTATION', 'LAB', 'OTHER'];
@@ -66,24 +66,25 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold gradient-text mb-2 flex items-center justify-center gap-3">
-          <Sparkles className="h-8 w-8 text-accent-cyan" />
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h1 className="gradient-text" style={{ fontSize: '1.875rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
+          <Sparkles size={32} style={{ color: 'var(--accent-cyan)' }} />
           Explorar
         </h1>
-        <p className="text-gray-400">Descubre proyectos públicos y personas de la comunidad</p>
+        <p style={{ color: 'var(--gray-400)' }}>Descubre proyectos públicos y personas de la comunidad</p>
       </div>
 
       {/* Search & Tabs */}
-      <div className="card p-4">
-        <form onSubmit={handleSearch} className="flex gap-2 mb-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+      <div className="card" style={{ padding: '1rem' }}>
+        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div className="search-wrapper" style={{ flex: 1 }}>
+            <Search className="search-icon" size={16} />
             <input
               type="text"
-              className="input pl-10"
+              className="input"
+              style={{ paddingLeft: '2.5rem' }}
               placeholder={tab === 'projects' ? 'Buscar proyectos...' : 'Buscar usuarios...'}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -94,27 +95,19 @@ export default function ExplorePage() {
           </button>
         </form>
 
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button
             onClick={() => setTab('projects')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              tab === 'projects'
-                ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30'
-                : 'bg-white/5 text-gray-400 border border-white/10 hover:border-white/20'
-            }`}
+            className={tab === 'projects' ? 'tab-btn tab-active' : 'tab-btn tab-inactive'}
           >
-            <FolderOpen className="h-4 w-4" />
+            <FolderOpen size={16} />
             Proyectos
           </button>
           <button
             onClick={() => setTab('users')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              tab === 'users'
-                ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30'
-                : 'bg-white/5 text-gray-400 border border-white/10 hover:border-white/20'
-            }`}
+            className={tab === 'users' ? 'tab-btn tab-active' : 'tab-btn tab-inactive'}
           >
-            <Users className="h-4 w-4" />
+            <Users size={16} />
             Usuarios
           </button>
         </div>
@@ -122,16 +115,12 @@ export default function ExplorePage() {
 
       {/* Category filter (projects only) */}
       {tab === 'projects' && (
-        <div className="flex flex-wrap gap-2">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                category === cat
-                  ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30'
-                  : 'bg-white/5 text-gray-400 border border-white/10 hover:border-white/20'
-              }`}
+              className={category === cat ? 'filter-pill filter-pill-active' : 'filter-pill filter-pill-inactive'}
             >
               {cat === 'ALL' ? 'Todos' : getCategoryLabel(cat)}
             </button>
@@ -141,8 +130,8 @@ export default function ExplorePage() {
 
       {/* Loading */}
       {loading && (
-        <div className="flex justify-center py-10">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-cyan"></div>
+        <div className="spinnerCenter">
+          <div className="spinner" style={{ width: '2rem', height: '2rem' }} />
         </div>
       )}
 
@@ -150,7 +139,7 @@ export default function ExplorePage() {
       {!loading && tab === 'projects' && (
         <>
           {projects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid-responsive-3">
               {projects.map((project) => (
                 <Link key={project.id} href={`/project/${project.id}`}>
                   <ProjectCard project={project} isPublic />
@@ -158,9 +147,9 @@ export default function ExplorePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <FolderOpen className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No se encontraron proyectos públicos.</p>
+            <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+              <FolderOpen size={48} style={{ color: 'var(--gray-600)', margin: '0 auto 0.75rem' }} />
+              <p style={{ color: 'var(--gray-400)' }}>No se encontraron proyectos públicos.</p>
             </div>
           )}
         </>
@@ -170,21 +159,21 @@ export default function ExplorePage() {
       {!loading && tab === 'users' && (
         <>
           {users.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid-responsive-3">
               {users.map((user) => (
                 <Link key={user.id} href={`/profile/${user.id}`}>
-                  <div className="card p-4 hover:border-accent-cyan/30 transition-all group cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-dark-700 flex items-center justify-center overflow-hidden border border-white/10">
+                  <div className="card" style={{ padding: '1rem', cursor: 'pointer' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{ width: '3rem', height: '3rem', borderRadius: '9999px', background: 'var(--dark-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
                         {user.avatar ? (
-                          <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api').replace('/api', '')}${user.avatar}`} alt="" className="w-full h-full object-cover" />
+                          <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api').replace('/api', '')}${user.avatar}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
-                          <Users className="h-5 w-5 text-gray-500" />
+                          <Users size={20} style={{ color: 'var(--gray-500)' }} />
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-200 group-hover:text-accent-cyan transition-colors">{user.name}</p>
-                        {user.bio && <p className="text-xs text-gray-500 line-clamp-1">{user.bio}</p>}
+                        <p style={{ fontWeight: 500, color: 'var(--gray-200)' }}>{user.name}</p>
+                        {user.bio && <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.bio}</p>}
                       </div>
                     </div>
                   </div>
@@ -192,9 +181,9 @@ export default function ExplorePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <Users className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">
+            <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+              <Users size={48} style={{ color: 'var(--gray-600)', margin: '0 auto 0.75rem' }} />
+              <p style={{ color: 'var(--gray-400)' }}>
                 {search.trim() ? 'No se encontraron usuarios.' : 'Escribe un nombre para buscar usuarios.'}
               </p>
             </div>

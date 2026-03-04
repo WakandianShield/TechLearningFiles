@@ -33,58 +33,58 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+      <div className="spinnerCenter">
+        <div className="spinner"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Welcome */}
       <div>
-        <h1 className="text-3xl font-bold gradient-text">
+        <h1 className="gradient-text" style={{ fontSize: '1.875rem', fontWeight: 700 }}>
           Hola, {session?.user?.name}
         </h1>
-        <p className="text-gray-400 mt-1">
+        <p style={{ color: 'var(--gray-400)', marginTop: '0.25rem' }}>
           Bienvenido a tu journey academico. Aqui puedes ver un resumen de tus proyectos.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid-stats">
         <div className="stat-card">
-          <div className="flex items-center gap-3 relative z-10">
-            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
-              <FolderOpen className="h-5 w-5 text-blue-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', position: 'relative', zIndex: 1 }}>
+            <div className="icon-box icon-box-md ib-blue">
+              <FolderOpen size={20} style={{ color: '#60a5fa' }} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-100">{stats?.projectCount || 0}</p>
-              <p className="text-sm text-gray-400">Proyectos</p>
+              <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>{stats?.projectCount || 0}</p>
+              <p style={{ fontSize: '0.875rem', color: 'var(--gray-400)' }}>Proyectos</p>
             </div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="flex items-center gap-3 relative z-10">
-            <div className="p-2.5 rounded-xl bg-accent-green/10 border border-accent-green/20">
-              <FileIcon className="h-5 w-5 text-accent-green" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', position: 'relative', zIndex: 1 }}>
+            <div className="icon-box icon-box-md ib-green">
+              <FileIcon size={20} style={{ color: 'var(--accent-green)' }} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-100">{stats?.fileCount || 0}</p>
-              <p className="text-sm text-gray-400">Archivos</p>
+              <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>{stats?.fileCount || 0}</p>
+              <p style={{ fontSize: '0.875rem', color: 'var(--gray-400)' }}>Archivos</p>
             </div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="flex items-center gap-3 relative z-10">
-            <div className="p-2.5 rounded-xl bg-accent-purple/10 border border-accent-purple/20">
-              <BarChart3 className="h-5 w-5 text-accent-purple" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', position: 'relative', zIndex: 1 }}>
+            <div className="icon-box icon-box-md ib-purple">
+              <BarChart3 size={20} style={{ color: 'var(--accent-purple)' }} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-100">
+              <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>
                 {stats?.categories?.length || 0}
               </p>
-              <p className="text-sm text-gray-400">Categorías</p>
+              <p style={{ fontSize: '0.875rem', color: 'var(--gray-400)' }}>Categorías</p>
             </div>
           </div>
         </div>
@@ -92,28 +92,28 @@ export default function DashboardPage() {
 
       {/* Recent projects */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-100">Proyectos Recientes</h2>
-          <Link href="/dashboard/projects/new" className="btn-primary flex items-center gap-2 text-sm">
-            <Plus className="h-4 w-4" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--gray-100)' }}>Proyectos Recientes</h2>
+          <Link href="/dashboard/projects/new" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
+            <Plus size={16} />
             Nuevo Proyecto
           </Link>
         </div>
 
         {projects.length === 0 ? (
-          <div className="card p-12 text-center">
-            <FolderOpen className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-200">No hay proyectos aún</h3>
-            <p className="text-gray-500 mt-1 mb-4">
+          <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
+            <FolderOpen size={48} style={{ color: 'var(--gray-600)', margin: '0 auto 1rem' }} />
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 500, color: 'var(--gray-200)' }}>No hay proyectos aún</h3>
+            <p style={{ color: 'var(--gray-500)', marginTop: '0.25rem', marginBottom: '1rem' }}>
               Comienza creando tu primer proyecto académico.
             </p>
-            <Link href="/dashboard/projects/new" className="btn-primary inline-flex items-center gap-2">
-              <Plus className="h-4 w-4" />
+            <Link href="/dashboard/projects/new" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Plus size={16} />
               Crear Proyecto
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid-responsive-3">
             {projects.slice(0, 6).map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -121,8 +121,8 @@ export default function DashboardPage() {
         )}
 
         {projects.length > 6 && (
-          <div className="text-center mt-6">
-            <Link href="/dashboard/projects" className="btn-secondary text-sm">
+          <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+            <Link href="/dashboard/projects" className="btn-secondary" style={{ fontSize: '0.875rem' }}>
               Ver todos los proyectos
             </Link>
           </div>

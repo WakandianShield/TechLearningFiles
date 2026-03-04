@@ -17,23 +17,23 @@ export default function HomePage() {
   }, [status, router]);
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1a24 100%)' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d1a24 100%)' }}>
       {/* Header */}
-      <header className="border-b border-white/10 bg-dark-900/80 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-8 w-8 text-accent-cyan" />
-              <span className="text-xl font-bold gradient-text">TechLearning</span>
+      <header style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="container-app">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <BookOpen size={32} style={{ color: 'var(--accent-cyan)' }} />
+              <span className="gradient-text" style={{ fontSize: '1.25rem', fontWeight: 700 }}>TechLearning</span>
             </div>
-            <div className="flex gap-3">
-              <Link href="/explore" className="btn-secondary text-sm">
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <Link href="/explore" className="btn-secondary" style={{ fontSize: '0.875rem' }}>
                 Explorar
               </Link>
-              <Link href="/auth/login" className="btn-secondary text-sm">
+              <Link href="/auth/login" className="btn-secondary" style={{ fontSize: '0.875rem' }}>
                 Iniciar Sesión
               </Link>
-              <Link href="/auth/register" className="btn-primary text-sm">
+              <Link href="/auth/register" className="btn-primary" style={{ fontSize: '0.875rem' }}>
                 Registrarse
               </Link>
             </div>
@@ -42,68 +42,79 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-sm mb-6">
-            <Sparkles className="h-4 w-4" />
+      <main className="container-app" style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
+        <div className="animate-fade-in-up" style={{ textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.25rem 1rem',
+            borderRadius: '9999px',
+            background: 'rgba(100,255,218,0.1)',
+            border: '1px solid rgba(100,255,218,0.2)',
+            color: 'var(--accent-cyan)',
+            fontSize: '0.875rem',
+            marginBottom: '1.5rem',
+          }}>
+            <Sparkles size={16} />
             Plataforma de archivos académicos
           </div>
-          <h1 className="text-5xl font-extrabold text-gray-100 sm:text-6xl">
+          <h1 style={{ fontSize: 'clamp(3rem, 5vw, 3.75rem)', fontWeight: 800, color: 'var(--gray-100)' }}>
             Tu Journey
             <span className="gradient-text"> Académico</span>
           </h1>
-          <p className="mt-6 text-xl text-gray-400 max-w-2xl mx-auto">
+          <p style={{ marginTop: '1.5rem', fontSize: '1.25rem', color: 'var(--gray-400)', maxWidth: '42rem', marginLeft: 'auto', marginRight: 'auto' }}>
             Organiza, guarda y gestiona todos tus proyectos académicos en un solo lugar.
             PDFs, documentos, videos, fotos y cualquier tipo de archivo.
           </p>
-          <div className="mt-10 flex justify-center gap-4">
-            <Link href="/auth/register" className="btn-primary text-lg px-8 py-3">
+          <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <Link href="/auth/register" className="btn-primary" style={{ fontSize: '1.125rem', padding: '0.75rem 2rem' }}>
               Comenzar Gratis
             </Link>
-            <Link href="/auth/login" className="btn-secondary text-lg px-8 py-3">
+            <Link href="/auth/login" className="btn-secondary" style={{ fontSize: '1.125rem', padding: '0.75rem 2rem' }}>
               Ya tengo cuenta
             </Link>
           </div>
         </div>
 
         {/* Features */}
-        <div className="mt-24 grid md:grid-cols-4 gap-6">
-          <div className="card p-8 text-center group">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 mb-4 group-hover:scale-110 transition-transform">
-              <Upload className="h-7 w-7 text-blue-400" />
+        <div className="grid-responsive-4" style={{ marginTop: '6rem' }}>
+          <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
+            <div className="icon-box icon-box-lg ib-blue" style={{ display: 'inline-flex', marginBottom: '1rem', transition: 'transform 0.3s' }}>
+              <Upload size={28} style={{ color: '#60a5fa' }} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-100">Sube Todo</h3>
-            <p className="mt-2 text-gray-400 text-sm">
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)' }}>Sube Todo</h3>
+            <p style={{ marginTop: '0.5rem', color: 'var(--gray-400)', fontSize: '0.875rem' }}>
               PDFs, documentos Word, videos, imágenes, código, presentaciones... cualquier archivo.
             </p>
           </div>
 
-          <div className="card p-8 text-center group">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent-green/10 border border-accent-green/20 mb-4 group-hover:scale-110 transition-transform">
-              <FolderOpen className="h-7 w-7 text-accent-green" />
+          <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
+            <div className="icon-box icon-box-lg ib-green" style={{ display: 'inline-flex', marginBottom: '1rem', transition: 'transform 0.3s' }}>
+              <FolderOpen size={28} style={{ color: 'var(--accent-green)' }} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-100">Organiza por Proyecto</h3>
-            <p className="mt-2 text-gray-400 text-sm">
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)' }}>Organiza por Proyecto</h3>
+            <p style={{ marginTop: '0.5rem', color: 'var(--gray-400)', fontSize: '0.875rem' }}>
               Agrupa archivos por materia, semestre y categoría. Lleva un journey de tu carrera.
             </p>
           </div>
 
-          <div className="card p-8 text-center group">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent-purple/10 border border-accent-purple/20 mb-4 group-hover:scale-110 transition-transform">
-              <Shield className="h-7 w-7 text-accent-purple" />
+          <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
+            <div className="icon-box icon-box-lg ib-purple" style={{ display: 'inline-flex', marginBottom: '1rem', transition: 'transform 0.3s' }}>
+              <Shield size={28} style={{ color: 'var(--accent-purple)' }} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-100">Seguro y Protegido</h3>
-            <p className="mt-2 text-gray-400 text-sm">
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)' }}>Seguro y Protegido</h3>
+            <p style={{ marginTop: '0.5rem', color: 'var(--gray-400)', fontSize: '0.875rem' }}>
               Protección con Helmet, DOMPurify y autenticación JWT. Tus archivos están seguros.
             </p>
           </div>
 
-          <div className="card p-8 text-center group">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent-cyan/10 border border-accent-cyan/20 mb-4 group-hover:scale-110 transition-transform">
-              <Globe className="h-7 w-7 text-accent-cyan" />
+          <div className="card" style={{ padding: '2rem', textAlign: 'center' }}>
+            <div className="icon-box icon-box-lg ib-cyan" style={{ display: 'inline-flex', marginBottom: '1rem', transition: 'transform 0.3s' }}>
+              <Globe size={28} style={{ color: 'var(--accent-cyan)' }} />
             </div>
-            <h3 className="text-lg font-semibold text-gray-100">Comparte y Explora</h3>
-            <p className="mt-2 text-gray-400 text-sm">
+            <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)' }}>Comparte y Explora</h3>
+            <p style={{ marginTop: '0.5rem', color: 'var(--gray-400)', fontSize: '0.875rem' }}>
               Haz públicos tus proyectos y descubre lo que otros comparten en la comunidad.
             </p>
           </div>
@@ -111,8 +122,8 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 mt-20">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center text-gray-500 text-sm">
+      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '5rem' }}>
+        <div className="container-app" style={{ paddingTop: '2rem', paddingBottom: '2rem', textAlign: 'center', color: 'var(--gray-500)', fontSize: '0.875rem' }}>
           &copy; {new Date().getFullYear()} TechLearning. Academic Files Journey Platform.
         </div>
       </footer>

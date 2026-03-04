@@ -21,6 +21,7 @@ export default function SettingsPage() {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [bannerHover, setBannerHover] = useState(false);
 
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
@@ -104,81 +105,128 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+      <div className="spinnerCenter">
+        <div className="spinner" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in-up">
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/profile" className="text-gray-400 hover:text-accent-cyan transition-colors">
-          <ArrowLeft className="h-5 w-5" />
+    <div
+      className="animate-fade-in-up"
+      style={{ maxWidth: '48rem', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <Link href="/dashboard/profile" className="link-cyan">
+          <ArrowLeft size={20} />
         </Link>
-        <h1 className="text-2xl font-bold gradient-text">Configuración</h1>
+        <h1 className="gradient-text" style={{ fontSize: '1.5rem', fontWeight: 700 }}>Configuración</h1>
       </div>
 
       {/* Banner & Avatar */}
-      <div className="card overflow-hidden">
-        <div className="relative group">
+      <div className="card" style={{ overflow: 'hidden' }}>
+        <div style={{ position: 'relative' }}>
           <div
-            className="h-44 bg-gradient-to-r from-accent-cyan/20 via-accent-purple/20 to-accent-blue/20 relative"
-            style={profile?.banner ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+            className="banner-gradient banner-tall"
+            style={profile?.banner
+              ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+              : {}
+            }
+            onMouseEnter={() => setBannerHover(true)}
+            onMouseLeave={() => setBannerHover(false)}
           >
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(0,0,0,0.4)',
+                opacity: bannerHover ? 1 : 0,
+                transition: 'opacity 0.3s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <button
                 onClick={() => bannerInputRef.current?.click()}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-dark-900/80 text-white border border-white/20 hover:border-accent-cyan/40 transition-all text-sm"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.5rem',
+                  background: 'rgba(0,0,0,0.8)',
+                  color: 'white',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                }}
                 disabled={uploadingBanner}
               >
-                {uploadingBanner ? <Loader2 className="h-4 w-4 animate-spin" /> : <Image className="h-4 w-4" />}
+                {uploadingBanner ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Image size={16} />}
                 Cambiar Banner
               </button>
             </div>
           </div>
-          <input ref={bannerInputRef} type="file" accept="image/*" className="hidden" onChange={handleBannerUpload} />
+          <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleBannerUpload} />
         </div>
 
-        <div className="px-6 pb-6 -mt-12 relative">
-          <div className="relative inline-block group/avatar">
-            <div className="w-24 h-24 rounded-full bg-dark-700 border-4 border-dark-900 flex items-center justify-center overflow-hidden shadow-lg">
+        <div style={{ padding: '0 1.5rem 1.5rem', marginTop: '-3rem', position: 'relative' }}>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <div className="avatar-lg">
               {profile?.avatar ? (
-                <img src={`${API_URL.replace('/api', '')}${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
+                <img
+                  src={`${API_URL.replace('/api', '')}${profile.avatar}`}
+                  alt="Avatar"
+                  className="avatar-img"
+                />
               ) : (
-                <User className="h-10 w-10 text-gray-400" />
+                <User size={40} style={{ color: 'var(--gray-400)' }} />
               )}
             </div>
             <button
               onClick={() => avatarInputRef.current?.click()}
-              className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-dark-800 border-2 border-dark-900 flex items-center justify-center text-gray-400 hover:text-accent-cyan hover:border-accent-cyan/40 transition-all"
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                width: '2rem',
+                height: '2rem',
+                borderRadius: '50%',
+                background: 'var(--dark-800)',
+                border: '2px solid var(--dark-900)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--gray-400)',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+              }}
               disabled={uploadingAvatar}
             >
-              {uploadingAvatar ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
+              {uploadingAvatar ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Camera size={14} />}
             </button>
-            <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+            <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarUpload} />
           </div>
         </div>
       </div>
 
       {/* Message */}
       {message.text && (
-        <div className={`p-3 rounded-lg text-sm ${
-          message.type === 'error'
-            ? 'bg-accent-red/10 border border-accent-red/30 text-accent-red'
-            : 'bg-accent-green/10 border border-accent-green/30 text-accent-green'
-        }`}>
+        <div className={message.type === 'error' ? 'msg-error' : 'msg-success'}>
           {message.text}
         </div>
       )}
 
       {/* Profile form */}
-      <form onSubmit={handleSave} className="space-y-6">
-        <div className="card p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-100">Información personal</h3>
+      <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)' }}>Información personal</h3>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
+              Nombre
+            </label>
             <input
               type="text"
               className="input"
@@ -189,7 +237,9 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Bio</label>
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
+              Bio
+            </label>
             <textarea
               className="input"
               rows={3}
@@ -200,8 +250,8 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              <Globe className="h-4 w-4 inline mr-1" />
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
+              <Globe size={16} />
               Sitio Web
             </label>
             <input
@@ -215,13 +265,13 @@ export default function SettingsPage() {
         </div>
 
         {/* Social Links */}
-        <div className="card p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-100">Redes Sociales</h3>
+        <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)' }}>Redes Sociales</h3>
 
           {SOCIAL_PLATFORMS.map(({ key, label, icon: Icon, placeholder }) => (
             <div key={key}>
-              <label className="flex items-center gap-1.5 text-sm font-medium text-gray-300 mb-1">
-                <Icon className="h-4 w-4" />
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
+                <Icon size={16} />
                 {label}
               </label>
               <input
@@ -235,9 +285,9 @@ export default function SettingsPage() {
           ))}
         </div>
 
-        <div className="flex gap-3">
-          <button type="submit" className="btn-primary flex items-center gap-2" disabled={saving}>
-            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button type="submit" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} disabled={saving}>
+            {saving && <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />}
             {saving ? 'Guardando...' : 'Guardar Cambios'}
           </button>
           <Link href="/dashboard/profile" className="btn-secondary">

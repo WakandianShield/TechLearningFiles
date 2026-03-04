@@ -57,17 +57,17 @@ export default function PublicProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+      <div className="spinnerCenter">
+        <div className="spinner" />
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="text-center py-20">
-        <User className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-        <p className="text-gray-400">Usuario no encontrado.</p>
+      <div style={{ textAlign: 'center', padding: '5rem 0' }}>
+        <User size={48} style={{ color: 'var(--gray-600)', margin: '0 auto 0.75rem' }} />
+        <p style={{ color: 'var(--gray-400)' }}>Usuario no encontrado.</p>
       </div>
     );
   }
@@ -75,34 +75,34 @@ export default function PublicProfilePage() {
   const socialLinks = profile.socialLinks || {};
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Banner + Avatar */}
-      <div className="card overflow-hidden">
+      <div className="card" style={{ overflow: 'hidden' }}>
         <div
-          className="h-48 bg-gradient-to-r from-accent-cyan/20 via-accent-purple/20 to-accent-blue/20 relative"
+          className="banner-gradient banner-xl"
           style={profile.banner ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent" />
+          <div className="banner-overlay" />
         </div>
-        <div className="px-6 pb-6 -mt-14 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-            <div className="w-28 h-28 rounded-full bg-dark-700 border-4 border-dark-900 flex items-center justify-center overflow-hidden shadow-lg">
+        <div style={{ padding: '0 1.5rem 1.5rem', marginTop: '-3.5rem', position: 'relative' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="avatar-xl">
               {profile.avatar ? (
-                <img src={`${API_URL.replace('/api', '')}${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
+                <img src={`${API_URL.replace('/api', '')}${profile.avatar}`} alt="Avatar" className="avatar-img" />
               ) : (
-                <User className="h-12 w-12 text-gray-400" />
+                <User size={48} style={{ color: 'var(--gray-400)' }} />
               )}
             </div>
-            <div className="flex-1 mb-2">
-              <h1 className="text-2xl font-bold text-gray-100">{profile.name}</h1>
-              {profile.bio && <p className="text-gray-400 mt-1">{profile.bio}</p>}
-              <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-gray-500">
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4" />
+            <div style={{ flex: 1, marginBottom: '0.5rem' }}>
+              <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>{profile.name}</h1>
+              {profile.bio && <p style={{ color: 'var(--gray-400)', marginTop: '0.25rem' }}>{profile.bio}</p>}
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--gray-500)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <Calendar size={16} />
                   <span>Desde {format(new Date(profile.createdAt), "MMMM yyyy", { locale: es })}</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <FolderOpen className="h-4 w-4" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <FolderOpen size={16} />
                   <span>{profile._count?.projects || 0} proyectos públicos</span>
                 </div>
               </div>
@@ -113,15 +113,16 @@ export default function PublicProfilePage() {
 
       {/* Social Links */}
       {(profile.website || Object.keys(socialLinks).length > 0) && (
-        <div className="flex flex-wrap gap-2">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           {profile.website && (
             <a
               href={profile.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:border-accent-cyan/30 hover:text-accent-cyan transition-all text-sm"
+              className="social-link"
+              style={{ borderRadius: '9999px', padding: '0.375rem 0.75rem' }}
             >
-              <Globe className="h-3.5 w-3.5" />
+              <Globe size={14} />
               Website
             </a>
           )}
@@ -133,9 +134,10 @@ export default function PublicProfilePage() {
                 href={url as string}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:border-accent-cyan/30 hover:text-accent-cyan transition-all text-sm capitalize"
+                className="social-link"
+                style={{ borderRadius: '9999px', padding: '0.375rem 0.75rem', textTransform: 'capitalize' }}
               >
-                <Icon className="h-3.5 w-3.5" />
+                <Icon size={14} />
                 {platform}
               </a>
             );
@@ -145,18 +147,14 @@ export default function PublicProfilePage() {
 
       {/* Projects section */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-100 mb-4">Proyectos Públicos</h2>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)', marginBottom: '1rem' }}>Proyectos Públicos</h2>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                category === cat
-                  ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30'
-                  : 'bg-white/5 text-gray-400 border border-white/10 hover:border-white/20'
-              }`}
+              className={category === cat ? 'filter-pill filter-pill-active' : 'filter-pill filter-pill-inactive'}
             >
               {cat === 'ALL' ? 'Todos' : getCategoryLabel(cat)}
             </button>
@@ -164,7 +162,7 @@ export default function PublicProfilePage() {
         </div>
 
         {projects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid-responsive-3">
             {projects.map((project) => (
               <Link key={project.id} href={`/project/${project.id}`}>
                 <ProjectCard project={project} isPublic />
@@ -172,9 +170,9 @@ export default function PublicProfilePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <FolderOpen className="h-10 w-10 text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm">No hay proyectos públicos.</p>
+          <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+            <FolderOpen size={40} style={{ color: 'var(--gray-600)', margin: '0 auto 0.75rem' }} />
+            <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>No hay proyectos públicos.</p>
           </div>
         )}
       </div>

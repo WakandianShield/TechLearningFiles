@@ -5,12 +5,13 @@ import {
   Trash2, Download, Eye, Pencil, Check, X, Search,
   FileText, Image, Video, Music, Code2, Table2, Archive, Presentation, File, MoreVertical,
 } from 'lucide-react';
-import { formatFileSize, getFileIcon } from '@/lib/utils';
+import { cn, formatFileSize, getFileIcon } from '@/lib/utils';
 import { deleteFile, renameFile } from '@/lib/api';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { sanitizeText } from '@/lib/sanitize';
 import FilePreview from './FilePreview';
+import styles from './FileList.module.css';
 
 interface ProjectFile {
   id: string;
@@ -42,22 +43,22 @@ const FILE_TYPE_LABELS: Record<string, string> = {
 type SortBy = 'date' | 'name' | 'size' | 'type';
 
 const FILE_ICON_MAP: Record<string, { icon: any; color: string; bg: string }> = {
-  pdf: { icon: FileText, color: 'text-red-400', bg: 'bg-red-500/10' },
-  image: { icon: Image, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  video: { icon: Video, color: 'text-purple-400', bg: 'bg-purple-500/10' },
-  audio: { icon: Music, color: 'text-pink-400', bg: 'bg-pink-500/10' },
-  document: { icon: FileText, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-  spreadsheet: { icon: Table2, color: 'text-green-400', bg: 'bg-green-500/10' },
-  archive: { icon: Archive, color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
-  presentation: { icon: Presentation, color: 'text-orange-400', bg: 'bg-orange-500/10' },
-  file: { icon: File, color: 'text-gray-400', bg: 'bg-gray-500/10' },
+  pdf: { icon: FileText, color: '#f87171', bg: styles.bgPdf },
+  image: { icon: Image, color: '#34d399', bg: styles.bgImage },
+  video: { icon: Video, color: '#c084fc', bg: styles.bgVideo },
+  audio: { icon: Music, color: '#f472b6', bg: styles.bgAudio },
+  document: { icon: FileText, color: '#60a5fa', bg: styles.bgDocument },
+  spreadsheet: { icon: Table2, color: '#4ade80', bg: styles.bgSpreadsheet },
+  archive: { icon: Archive, color: '#facc15', bg: styles.bgArchive },
+  presentation: { icon: Presentation, color: '#fb923c', bg: styles.bgPresentation },
+  file: { icon: File, color: '#9ca3af', bg: styles.bgFile },
 };
 
-function FileIcon({ mimeType, className }: { mimeType: string; className?: string }) {
+function FileIcon({ mimeType, size = 32 }: { mimeType: string; size?: number }) {
   const key = getFileIcon(mimeType);
   const config = FILE_ICON_MAP[key] || FILE_ICON_MAP.file;
   const Icon = config.icon;
-  return <Icon className={`${config.color} ${className || 'h-8 w-8'}`} />;
+  return <Icon size={size} style={{ color: config.color }} />;
 }
 
 export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: FileListProps) {
@@ -115,9 +116,9 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
 
   if (files.length === 0) {
     return (
-      <div className="text-center py-12">
-        <File className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-        <p className="text-gray-500">No hay archivos aun. Sube tu primer archivo.</p>
+      <div className={styles.empty}>
+        <File size={48} className={styles.emptyIcon} />
+        <p className={styles.emptyText}>No hay archivos aun. Sube tu primer archivo.</p>
       </div>
     );
   }
@@ -125,22 +126,22 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
   const backendUrl = apiUrl.replace('/api', '');
 
   return (
-    <div className="space-y-4">
+    <div className={styles.wrapper}>
       {/* Filter bar */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+      <div className={styles.filterBar}>
+        <div className={styles.searchWrapper}>
+          <Search size={16} className={styles.searchIcon} />
           <input
             type="text"
-            className="input pl-10 text-sm"
+            className="input"
             placeholder="Buscar archivos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex gap-2">
+        <div className={styles.filterGroup}>
           <select
-            className="input text-sm w-auto"
+            className="input"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
           >
@@ -149,7 +150,7 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
             ))}
           </select>
           <select
-            className="input text-sm w-auto"
+            className="input"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortBy)}
           >
@@ -161,10 +162,10 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
         </div>
       </div>
 
-      <p className="text-xs text-gray-500">{filtered.length} de {files.length} archivos</p>
+      <p className={styles.fileCount}>{filtered.length} de {files.length} archivos</p>
 
       {/* Grid view */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <div className={styles.grid}>
         {filtered.map((file) => {
           const isImage = file.mimeType.startsWith('image/');
           const key = getFileIcon(file.mimeType);
@@ -173,45 +174,41 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
           return (
             <div
               key={file.id}
-              className="group relative rounded-xl overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-accent-cyan/5"
-              style={{
-                background: 'linear-gradient(135deg, rgba(25, 25, 25, 0.9), rgba(18, 18, 18, 0.95))',
-                border: '1px solid rgba(100, 255, 218, 0.06)',
-              }}
+              className={styles.fileCard}
               onClick={() => setMenuOpen(null)}
             >
               {/* Thumbnail / Icon area */}
               <div
-                className="block cursor-pointer"
+                className={styles.thumbnail}
                 onClick={(e) => {
                   e.stopPropagation();
                   setPreviewFile(file);
                 }}
               >
-                <div className={`h-32 flex items-center justify-center relative ${iconConfig.bg}`}>
+                <div className={cn(styles.thumbnailArea, iconConfig.bg)}>
                   {isImage ? (
                     <img
                       src={`${backendUrl}${file.filePath}`}
                       alt={file.displayName || file.originalName}
-                      className="w-full h-full object-cover"
+                      className={styles.thumbnailImg}
                       loading="lazy"
                     />
                   ) : (
-                    <FileIcon mimeType={file.mimeType} className="h-12 w-12" />
+                    <FileIcon mimeType={file.mimeType} size={48} />
                   )}
                   {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <Eye className="h-6 w-6 text-white drop-shadow-lg" />
+                  <div className={styles.hoverOverlay}>
+                    <Eye size={24} className={styles.hoverIcon} />
                   </div>
                 </div>
               </div>
 
               {/* File info */}
-              <div className="p-3">
+              <div className={styles.fileInfo}>
                 {editingId === file.id ? (
-                  <div className="flex items-center gap-1">
+                  <div className={styles.renameForm}>
                     <input
-                      className="input text-xs py-1 px-2 flex-1 min-w-0"
+                      className="input"
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
                       onKeyDown={(e) => {
@@ -221,66 +218,62 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
                       autoFocus
                       onClick={(e) => e.stopPropagation()}
                     />
-                    <button onClick={(e) => { e.stopPropagation(); handleRename(file.id); }} className="p-1 text-accent-green hover:text-green-400">
-                      <Check className="h-3.5 w-3.5" />
+                    <button onClick={(e) => { e.stopPropagation(); handleRename(file.id); }} className={styles.renameOk}>
+                      <Check size={14} />
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); setEditingId(null); }} className="p-1 text-gray-500 hover:text-gray-300">
-                      <X className="h-3.5 w-3.5" />
+                    <button onClick={(e) => { e.stopPropagation(); setEditingId(null); }} className={styles.renameCancel}>
+                      <X size={14} />
                     </button>
                   </div>
                 ) : (
-                  <p className="text-xs font-medium text-gray-200 truncate" title={file.displayName || file.originalName}>
+                  <p className={styles.fileName} title={file.displayName || file.originalName}>
                     {sanitizeText(file.displayName || file.originalName)}
                   </p>
                 )}
-                <div className="flex items-center gap-1.5 mt-1 text-[10px] text-gray-500">
+                <div className={styles.fileMeta}>
                   <span>{formatFileSize(file.size)}</span>
-                  <span className="text-accent-cyan/30">|</span>
+                  <span className={styles.metaSep}>|</span>
                   <span>{format(new Date(file.createdAt), "d MMM", { locale: es })}</span>
                 </div>
               </div>
 
               {/* Actions menu */}
               {!readOnly && (
-                <div className="absolute top-2 right-2 z-10">
+                <div className={styles.menuBtn}>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setMenuOpen(menuOpen === file.id ? null : file.id);
                     }}
-                    className="p-1.5 rounded-lg bg-dark-900/70 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-white hover:bg-dark-900/90 transition-all backdrop-blur-sm"
+                    className={styles.menuToggle}
                   >
-                    <MoreVertical className="h-4 w-4" />
+                    <MoreVertical size={16} />
                   </button>
 
                   {menuOpen === file.id && (
                     <div
-                      className="absolute right-0 top-9 w-40 rounded-lg py-1.5 shadow-xl z-20"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.98), rgba(20, 20, 20, 0.98))',
-                        border: '1px solid rgba(100, 255, 218, 0.15)',
-                      }}
+                      className={styles.menu}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
                         onClick={() => startRename(file)}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-accent-cyan hover:bg-white/5 transition-colors"
+                        className={cn(styles.menuItem, styles.menuItemRename)}
                       >
-                        <Pencil className="h-3.5 w-3.5" /> Renombrar
+                        <Pencil size={14} /> Renombrar
                       </button>
                       <a
                         href={`${backendUrl}${file.filePath}`}
                         download={file.displayName || file.originalName}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-accent-green hover:bg-white/5 transition-colors"
+                        className={cn(styles.menuItem, styles.menuItemDownload)}
                         onClick={() => setMenuOpen(null)}
                       >
-                        <Download className="h-3.5 w-3.5" /> Descargar
+                        <Download size={14} /> Descargar
                       </a>
                       <button
                         onClick={() => { setMenuOpen(null); handleDelete(file.id); }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-accent-red hover:bg-white/5 transition-colors"
+                        className={cn(styles.menuItem, styles.menuItemDelete)}
                       >
-                        <Trash2 className="h-3.5 w-3.5" /> Eliminar
+                        <Trash2 size={14} /> Eliminar
                       </button>
                     </div>
                   )}
@@ -292,10 +285,10 @@ export default function FileList({ files, onFileDeleted, apiUrl, readOnly }: Fil
                 <a
                   href={`${backendUrl}${file.filePath}`}
                   download={file.displayName || file.originalName}
-                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-dark-900/70 text-gray-400 opacity-0 group-hover:opacity-100 hover:text-accent-green hover:bg-dark-900/90 transition-all backdrop-blur-sm"
+                  className={styles.readOnlyDownload}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <Download className="h-4 w-4" />
+                  <Download size={16} />
                 </a>
               )}
             </div>

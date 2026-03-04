@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { OAuthLoginDto } from './dto/oauth-login.dto';
 
 @Injectable()
 export class AuthService {
@@ -38,9 +39,44 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!user.password) {
+      throw new UnauthorizedException(
+        'This account uses social login. Please sign in with the corresponding provider.',
+      );
+    }
+
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const token = this.generateToken(user.id, user.email);
+
+    return {
+      user: { id: user.id, email: user.email, name: user.name },
+      access_token: token,
+    };
+  }
+
+  async oauthLogin(dto: OAuthLoginDto) {
+    let user = await this.usersService.findByEmail(dto.email);
+
+    if (!user) {
+      // Create new user from OAuth data (no password)
+      user = await this.usersService.createOAuth({
+        email: dto.email,
+        name: dto.name,
+        provider: dto.provider,
+        providerAccountId: dto.providerAccountId,
+        avatar: dto.avatar,
+      });
+    } else {
+      // Update provider info if not set
+      if (!user.provider) {
+        await this.usersService.update(user.id, {
+          provider: dto.provider,
+        } as any);
+      }
     }
 
     const token = this.generateToken(user.id, user.email);

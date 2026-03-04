@@ -4,7 +4,8 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, X, Loader2, FileIcon } from 'lucide-react';
 import { uploadFiles } from '@/lib/api';
-import { formatFileSize } from '@/lib/utils';
+import { cn, formatFileSize } from '@/lib/utils';
+import styles from './FileUploader.module.css';
 
 interface FileUploaderProps {
   projectId: string;
@@ -51,26 +52,22 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
   };
 
   return (
-    <div className="space-y-4">
+    <div className={styles.wrapper}>
       {/* Dropzone */}
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 ${
-          isDragActive
-            ? 'border-accent-cyan bg-accent-cyan/5'
-            : 'border-gray-700 hover:border-accent-cyan/50 hover:bg-white/[0.02]'
-        }`}
+        className={cn(styles.dropzone, isDragActive && styles.dropzoneActive)}
       >
         <input {...getInputProps()} />
-        <Upload className="h-10 w-10 text-gray-500 mx-auto mb-3" />
+        <Upload size={40} className={styles.dropIcon} />
         {isDragActive ? (
-          <p className="text-accent-cyan font-medium">Suelta los archivos aquí...</p>
+          <p className={styles.dropActiveText}>Suelta los archivos aquí...</p>
         ) : (
           <>
-            <p className="text-gray-300 font-medium">
+            <p className={styles.dropText}>
               Arrastra archivos aquí o haz clic para seleccionar
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className={styles.dropHint}>
               PDFs, documentos, imágenes, videos, código... hasta 100MB por archivo
             </p>
           </>
@@ -79,29 +76,28 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
 
       {/* File list */}
       {selectedFiles.length > 0 && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-300">
+        <div className={styles.fileSection}>
+          <h4 className={styles.fileTitle}>
             Archivos seleccionados ({selectedFiles.length})
           </h4>
-          <div className="max-h-48 overflow-y-auto space-y-1">
+          <div className={styles.fileScroll}>
             {selectedFiles.map((file, index) => (
               <div
                 key={`${file.name}-${index}`}
-                className="flex items-center justify-between rounded-lg px-3 py-2"
-                style={{ background: 'rgba(15, 15, 15, 0.6)', border: '1px solid rgba(100, 255, 218, 0.06)' }}
+                className={styles.fileItem}
               >
-                <div className="flex items-center gap-2 min-w-0">
-                  <FileIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                  <span className="text-sm text-gray-300 truncate">{file.name}</span>
-                  <span className="text-xs text-gray-500 flex-shrink-0">
+                <div className={styles.fileItemInfo}>
+                  <FileIcon size={16} className={styles.fileItemIcon} />
+                  <span className={styles.fileItemName}>{file.name}</span>
+                  <span className={styles.fileItemSize}>
                     {formatFileSize(file.size)}
                   </span>
                 </div>
                 <button
                   onClick={() => removeFile(index)}
-                  className="text-gray-500 hover:text-accent-red flex-shrink-0 ml-2"
+                  className={styles.fileItemRemove}
                 >
-                  <X className="h-4 w-4" />
+                  <X size={16} />
                 </button>
               </div>
             ))}
@@ -110,22 +106,22 @@ export default function FileUploader({ projectId, onUploadComplete }: FileUpload
           {/* Description */}
           <input
             type="text"
-            className="input text-sm"
+            className="input"
             placeholder="Descripción de los archivos (opcional)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
           {error && (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className={styles.error}>{error}</p>
           )}
 
           <button
             onClick={handleUpload}
             disabled={uploading}
-            className="btn-primary flex items-center gap-2"
+            className={cn('btn-primary', styles.uploadBtn)}
           >
-            {uploading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {uploading && <Loader2 size={16} className="animate-spin" />}
             {uploading ? 'Subiendo...' : `Subir ${selectedFiles.length} archivo(s)`}
           </button>
         </div>

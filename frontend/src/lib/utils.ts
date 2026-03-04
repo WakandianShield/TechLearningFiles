@@ -26,15 +26,15 @@ export function getFileIcon(mimeType: string): string {
 
 export function getCategoryColor(category: string): string {
   const colors: Record<string, string> = {
-    PROGRAMMING: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
-    MATH: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
-    SCIENCE: 'bg-green-500/20 text-green-300 border border-green-500/30',
-    DESIGN: 'bg-pink-500/20 text-pink-300 border border-pink-500/30',
-    WRITING: 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30',
-    RESEARCH: 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30',
-    PRESENTATION: 'bg-orange-500/20 text-orange-300 border border-orange-500/30',
-    LAB: 'bg-teal-500/20 text-teal-300 border border-teal-500/30',
-    OTHER: 'bg-gray-500/20 text-gray-300 border border-gray-500/30',
+    PROGRAMMING: 'badge-programming',
+    MATH: 'badge-math',
+    SCIENCE: 'badge-science',
+    DESIGN: 'badge-design',
+    WRITING: 'badge-writing',
+    RESEARCH: 'badge-research',
+    PRESENTATION: 'badge-presentation',
+    LAB: 'badge-lab',
+    OTHER: 'badge-other',
   };
   return colors[category] || colors.OTHER;
 }

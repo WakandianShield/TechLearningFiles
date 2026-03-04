@@ -67,8 +67,8 @@ export default function ProjectDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+      <div className="spinnerCenter">
+        <div className="spinner" />
       </div>
     );
   }
@@ -76,65 +76,92 @@ export default function ProjectDetailPage() {
   if (!project) return null;
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div
+      className="animate-fade-in-up"
+      style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+    >
       {/* Back button */}
       <Link
         href="/dashboard/projects"
-        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-accent-cyan transition-colors"
+        className="link-cyan"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft size={16} />
         Volver a proyectos
       </Link>
 
       {/* Project header */}
-      <div className="card p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getCategoryColor(project.category)}`}>
+      <div className="card" style={{ padding: '1.5rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+              <span
+                className={getCategoryColor(project.category)}
+                style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px' }}
+              >
                 {getCategoryLabel(project.category)}
               </span>
               {project.pinned && (
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-accent-yellow/10 text-accent-yellow border border-accent-yellow/20">
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    padding: '0.125rem 0.5rem',
+                    borderRadius: '9999px',
+                    background: 'rgba(255,224,102,0.1)',
+                    color: 'var(--accent-yellow)',
+                    border: '1px solid rgba(255,224,102,0.2)',
+                  }}
+                >
                   Fijado
                 </span>
               )}
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                project.visibility === 'PUBLIC'
-                  ? 'bg-accent-green/10 text-accent-green border border-accent-green/20'
-                  : 'bg-gray-500/10 text-gray-400 border border-gray-500/20'
-              }`}>
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 500,
+                  padding: '0.125rem 0.5rem',
+                  borderRadius: '9999px',
+                  background: project.visibility === 'PUBLIC' ? 'rgba(52,211,153,0.1)' : 'rgba(107,114,128,0.1)',
+                  color: project.visibility === 'PUBLIC' ? 'var(--accent-green)' : 'var(--gray-400)',
+                  border: project.visibility === 'PUBLIC' ? '1px solid rgba(52,211,153,0.2)' : '1px solid rgba(107,114,128,0.2)',
+                }}
+              >
                 {project.visibility === 'PUBLIC' ? 'Público' : 'Privado'}
               </span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-100">{sanitizeText(project.title)}</h1>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>
+              {sanitizeText(project.title)}
+            </h1>
             {project.description && (
-              <p className="text-gray-400 mt-2">{sanitizeText(project.description)}</p>
+              <p style={{ color: 'var(--gray-400)', marginTop: '0.5rem' }}>
+                {sanitizeText(project.description)}
+              </p>
             )}
 
-            <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-500">
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem', marginTop: '1rem', fontSize: '0.875rem', color: 'var(--gray-500)' }}>
               {project.subject && (
-                <div className="flex items-center gap-1.5">
-                  <BookOpen className="h-4 w-4" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <BookOpen size={16} />
                   <span>{project.subject}</span>
                 </div>
               )}
               {project.semester && (
-                <div className="flex items-center gap-1.5">
-                  <Tag className="h-4 w-4" />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                  <Tag size={16} />
                   <span>Semestre {project.semester}</span>
                 </div>
               )}
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <Calendar size={16} />
                 <span>{format(new Date(project.createdAt), "d 'de' MMMM, yyyy", { locale: es })}</span>
               </div>
             </div>
 
             {project.tags?.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-3">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginTop: '0.75rem' }}>
                 {project.tags.map((tag: string) => (
-                  <span key={tag} className="text-xs bg-white/5 text-gray-400 px-2 py-0.5 rounded border border-white/10">
+                  <span key={tag} className="tag">
                     {tag}
                   </span>
                 ))}
@@ -142,17 +169,29 @@ export default function ProjectDetailPage() {
             )}
           </div>
 
-          <div className="flex gap-2 flex-wrap">
-            <button onClick={handleToggleVisibility} className="btn-secondary flex items-center gap-2 text-sm">
-              {project.visibility === 'PUBLIC' ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleToggleVisibility}
+              className="btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
+            >
+              {project.visibility === 'PUBLIC' ? <EyeOff size={16} /> : <Eye size={16} />}
               {project.visibility === 'PUBLIC' ? 'Hacer Privado' : 'Hacer Público'}
             </button>
-            <button onClick={handleTogglePin} className="btn-secondary flex items-center gap-2 text-sm">
-              {project.pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+            <button
+              onClick={handleTogglePin}
+              className="btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
+            >
+              {project.pinned ? <PinOff size={16} /> : <Pin size={16} />}
               {project.pinned ? 'Desfijar' : 'Fijar'}
             </button>
-            <button onClick={handleDelete} className="btn-danger flex items-center gap-2 text-sm">
-              <Trash2 className="h-4 w-4" />
+            <button
+              onClick={handleDelete}
+              className="btn-danger"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
+            >
+              <Trash2 size={16} />
               Eliminar
             </button>
           </div>
@@ -160,14 +199,16 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* File upload */}
-      <div className="card p-6">
-        <h2 className="text-lg font-semibold text-gray-100 mb-4">Subir Archivos</h2>
+      <div className="card" style={{ padding: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)', marginBottom: '1rem' }}>
+          Subir Archivos
+        </h2>
         <FileUploader projectId={project.id} onUploadComplete={fetchProject} />
       </div>
 
       {/* Files list */}
-      <div className="card p-6">
-        <h2 className="text-lg font-semibold text-gray-100 mb-4">
+      <div className="card" style={{ padding: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)', marginBottom: '1rem' }}>
           Archivos ({project.files?.length || 0})
         </h2>
         <FileList

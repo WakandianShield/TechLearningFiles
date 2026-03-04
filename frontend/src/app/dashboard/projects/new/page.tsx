@@ -58,19 +58,27 @@ export default function NewProjectPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in-up">
-      <h1 className="text-2xl font-bold gradient-text mb-6">Nuevo Proyecto</h1>
+    <div
+      className="animate-fade-in-up"
+      style={{ maxWidth: '42rem', margin: '0 auto' }}
+    >
+      <h1
+        className="gradient-text"
+        style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem' }}
+      >
+        Nuevo Proyecto
+      </h1>
 
-      <div className="card p-6">
+      <div className="card" style={{ padding: '1.5rem' }}>
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-sm">
+          <div className="msg-error" style={{ marginBottom: '1rem' }}>
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
               Título del proyecto *
             </label>
             <input
@@ -85,7 +93,7 @@ export default function NewProjectPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
               Descripción
             </label>
             <textarea
@@ -98,9 +106,9 @@ export default function NewProjectPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid-responsive-2">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
                 Categoría
               </label>
               <select
@@ -116,7 +124,7 @@ export default function NewProjectPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
                 Semestre
               </label>
               <input
@@ -131,7 +139,7 @@ export default function NewProjectPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
               Materia / Asignatura
             </label>
             <input
@@ -145,7 +153,7 @@ export default function NewProjectPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.25rem' }}>
               Tags (separados por coma)
             </label>
             <input
@@ -160,45 +168,42 @@ export default function NewProjectPage() {
 
           {/* Visibility selector */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: 'var(--gray-300)', marginBottom: '0.5rem' }}>
               Visibilidad
             </label>
-            <div className="flex gap-3">
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 type="button"
                 onClick={() => setForm({ ...form, visibility: 'PUBLIC' })}
-                className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border transition-all duration-200 ${
-                  form.visibility === 'PUBLIC'
-                    ? 'bg-accent-green/10 border-accent-green/40 text-accent-green'
-                    : 'bg-dark-800/50 border-white/10 text-gray-400 hover:border-white/20'
-                }`}
+                className={`vis-btn ${form.visibility === 'PUBLIC' ? 'vis-public' : 'vis-off'}`}
               >
-                <Globe className="h-4 w-4" />
-                <span className="text-sm font-medium">Público</span>
+                <Globe size={16} />
+                <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Público</span>
               </button>
               <button
                 type="button"
                 onClick={() => setForm({ ...form, visibility: 'PRIVATE' })}
-                className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-lg border transition-all duration-200 ${
-                  form.visibility === 'PRIVATE'
-                    ? 'bg-gray-500/10 border-gray-400/40 text-gray-300'
-                    : 'bg-dark-800/50 border-white/10 text-gray-400 hover:border-white/20'
-                }`}
+                className={`vis-btn ${form.visibility === 'PRIVATE' ? 'vis-private' : 'vis-off'}`}
               >
-                <Lock className="h-4 w-4" />
-                <span className="text-sm font-medium">Privado</span>
+                <Lock size={16} />
+                <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Privado</span>
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-1.5">
+            <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginTop: '0.375rem' }}>
               {form.visibility === 'PUBLIC'
                 ? 'Cualquier persona podrá ver este proyecto en Explorar.'
                 : 'Solo tú podrás ver este proyecto.'}
             </p>
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <button type="submit" className="btn-primary flex items-center gap-2" disabled={loading}>
-              {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+          <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.5rem' }}>
+            <button
+              type="submit"
+              className="btn-primary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              disabled={loading}
+            >
+              {loading && <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />}
               {loading ? 'Creando...' : 'Crear Proyecto'}
             </button>
             <button

@@ -38,31 +38,33 @@ export default function ProjectsPage() {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold gradient-text">Mis Proyectos</h1>
-        <Link href="/dashboard/projects/new" className="btn-primary flex items-center gap-2 text-sm">
-          <Plus className="h-4 w-4" />
+    <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h1 className="gradient-text" style={{ fontSize: '1.5rem', fontWeight: 700 }}>Mis Proyectos</h1>
+        <Link href="/dashboard/projects/new" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}>
+          <Plus size={16} />
           Nuevo Proyecto
         </Link>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+      <div className="flex-col-sm-row" style={{ gap: '0.75rem' }}>
+        <div className="search-wrapper" style={{ flex: 1 }}>
+          <Search className="search-icon" size={16} />
           <input
             type="text"
-            className="input pl-10"
+            className="input"
+            style={{ paddingLeft: '2.5rem' }}
             placeholder="Buscar proyectos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="relative">
-          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <div className="search-wrapper">
+          <Filter className="search-icon" size={16} />
           <select
-            className="input pl-10 pr-8 appearance-none"
+            className="input"
+            style={{ width: 'auto', paddingLeft: '2.5rem', appearance: 'none' }}
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -76,19 +78,19 @@ export default function ProjectsPage() {
 
       {/* Project grid */}
       {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+        <div className="spinnerCenter">
+          <div className="spinner"></div>
         </div>
       ) : filteredProjects.length === 0 ? (
-        <div className="card p-12 text-center">
-          <p className="text-gray-400">
+        <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
+          <p style={{ color: 'var(--gray-400)' }}>
             {search || selectedCategory
               ? 'No se encontraron proyectos con esos filtros.'
               : 'No tienes proyectos aún. ¡Crea el primero!'}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid-responsive-3">
           {filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}

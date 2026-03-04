@@ -37,8 +37,8 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+      <div className="spinnerCenter">
+        <div className="spinner" />
       </div>
     );
   }
@@ -46,32 +46,52 @@ export default function ProfilePage() {
   const socialLinks = profile?.socialLinks || {};
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in-up">
+    <div
+      className="animate-fade-in-up"
+      style={{ maxWidth: '48rem', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+    >
       {/* Banner + Avatar */}
-      <div className="card overflow-hidden">
-        <div 
-          className="h-40 bg-gradient-to-r from-accent-cyan/20 via-accent-purple/20 to-accent-blue/20 relative"
-          style={profile?.banner ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+      <div className="card" style={{ overflow: 'hidden' }}>
+        <div
+          className="banner-gradient"
+          style={profile?.banner
+            ? { backgroundImage: `url(${API_URL.replace('/api', '')}${profile.banner})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+            : {}
+          }
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent" />
+          <div className="banner-overlay" />
         </div>
-        <div className="px-6 pb-6 -mt-12 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div className="flex items-end gap-4">
-              <div className="w-24 h-24 rounded-full bg-dark-700 border-4 border-dark-900 flex items-center justify-center overflow-hidden shadow-lg">
+        <div style={{ padding: '0 1.5rem 1.5rem', marginTop: '-3rem', position: 'relative' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
+              <div className="avatar-lg">
                 {profile?.avatar ? (
-                  <img src={`${API_URL.replace('/api', '')}${profile.avatar}`} alt="Avatar" className="w-full h-full object-cover" />
+                  <img
+                    src={`${API_URL.replace('/api', '')}${profile.avatar}`}
+                    alt="Avatar"
+                    className="avatar-img"
+                  />
                 ) : (
-                  <User className="h-10 w-10 text-gray-400" />
+                  <User size={40} style={{ color: 'var(--gray-400)' }} />
                 )}
               </div>
-              <div className="mb-1">
-                <h1 className="text-2xl font-bold text-gray-100">{profile?.name}</h1>
-                {profile?.bio && <p className="text-gray-400 text-sm mt-0.5">{profile.bio}</p>}
+              <div style={{ marginBottom: '0.25rem' }}>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>
+                  {profile?.name}
+                </h1>
+                {profile?.bio && (
+                  <p style={{ color: 'var(--gray-400)', fontSize: '0.875rem', marginTop: '0.125rem' }}>
+                    {profile.bio}
+                  </p>
+                )}
               </div>
             </div>
-            <Link href="/dashboard/settings" className="btn-secondary flex items-center gap-2 text-sm self-start sm:self-auto">
-              <Settings className="h-4 w-4" />
+            <Link
+              href="/dashboard/settings"
+              className="btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
+            >
+              <Settings size={16} />
               Editar Perfil
             </Link>
           </div>
@@ -79,55 +99,61 @@ export default function ProfilePage() {
       </div>
 
       {/* Info cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="card p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-accent-cyan/10 flex items-center justify-center">
-            <Mail className="h-5 w-5 text-accent-cyan" />
+      <div className="grid-stats">
+        <div className="card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="icon-box icon-box-sm ib-cyan">
+            <Mail size={20} style={{ color: 'var(--accent-cyan)' }} />
           </div>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-500">Email</p>
-            <p className="text-sm text-gray-200 truncate">{profile?.email}</p>
+          <div style={{ minWidth: 0 }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>Email</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--gray-200)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {profile?.email}
+            </p>
           </div>
         </div>
 
-        <div className="card p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-accent-green/10 flex items-center justify-center">
-            <Calendar className="h-5 w-5 text-accent-green" />
+        <div className="card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="icon-box icon-box-sm ib-green">
+            <Calendar size={20} style={{ color: 'var(--accent-green)' }} />
           </div>
           <div>
-            <p className="text-xs text-gray-500">Miembro desde</p>
-            <p className="text-sm text-gray-200">
+            <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>Miembro desde</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--gray-200)' }}>
               {profile?.createdAt && format(new Date(profile.createdAt), "MMMM yyyy", { locale: es })}
             </p>
           </div>
         </div>
 
-        <div className="card p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-accent-purple/10 flex items-center justify-center">
-            <FolderOpen className="h-5 w-5 text-accent-purple" />
+        <div className="card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="icon-box icon-box-sm ib-purple">
+            <FolderOpen size={20} style={{ color: 'var(--accent-purple)' }} />
           </div>
           <div>
-            <p className="text-xs text-gray-500">Proyectos</p>
-            <p className="text-sm text-gray-200">{profile?._count?.projects || 0} creados</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>Proyectos</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--gray-200)' }}>
+              {profile?._count?.projects || 0} creados
+            </p>
           </div>
         </div>
       </div>
 
       {/* Website & Social Links */}
       {(profile?.website || Object.keys(socialLinks).length > 0) && (
-        <div className="card p-6">
-          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Enlaces</h3>
-          <div className="flex flex-wrap gap-3">
+        <div className="card" style={{ padding: '1.5rem' }}>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--gray-300)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
+            Enlaces
+          </h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             {profile?.website && (
               <a
                 href={profile.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:border-accent-cyan/30 hover:text-accent-cyan transition-all text-sm"
+                className="social-link"
               >
-                <Globe className="h-4 w-4" />
+                <Globe size={16} />
                 Website
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink size={12} />
               </a>
             )}
             {Object.entries(socialLinks).map(([platform, url]) => {
@@ -138,11 +164,12 @@ export default function ProfilePage() {
                   href={url as string}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:border-accent-cyan/30 hover:text-accent-cyan transition-all text-sm capitalize"
+                  className="social-link"
+                  style={{ textTransform: 'capitalize' }}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon size={16} />
                   {platform}
-                  <ExternalLink className="h-3 w-3" />
+                  <ExternalLink size={12} />
                 </a>
               );
             })}

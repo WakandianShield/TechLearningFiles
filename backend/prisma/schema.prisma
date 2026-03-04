@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  name        String
-  password    String
-  avatar      String?
-  banner      String?
-  bio         String?
-  website     String?
-  socialLinks Json?    // { github, linkedin, twitter, etc. }
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String
+  password          String?
+  avatar            String?
+  banner            String?
+  bio               String?
+  website           String?
+  socialLinks       Json?    // { github, linkedin, twitter, etc. }
+  provider          String?  // google, github, microsoft, credentials
+  providerAccountId String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   projects Project[]
 

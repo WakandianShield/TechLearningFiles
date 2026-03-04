@@ -35,19 +35,19 @@ export default function PublicProjectPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-cyan"></div>
+      <div className="spinnerCenter">
+        <div className="spinner" />
       </div>
     );
   }
 
   if (error || !project) {
     return (
-      <div className="text-center py-20">
-        <FolderOpen className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-        <h2 className="text-xl font-semibold text-gray-300 mb-2">Proyecto no encontrado</h2>
-        <p className="text-gray-500 mb-4">Este proyecto no existe o es privado.</p>
-        <Link href="/explore" className="btn-primary inline-block">
+      <div style={{ textAlign: 'center', padding: '5rem 0' }}>
+        <FolderOpen size={48} style={{ color: 'var(--gray-600)', margin: '0 auto 0.75rem' }} />
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--gray-300)', marginBottom: '0.5rem' }}>Proyecto no encontrado</h2>
+        <p style={{ color: 'var(--gray-500)', marginBottom: '1rem' }}>Este proyecto no existe o es privado.</p>
+        <Link href="/explore" className="btn-primary" style={{ display: 'inline-block' }}>
           Explorar proyectos
         </Link>
       </div>
@@ -55,71 +55,75 @@ export default function PublicProjectPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="animate-fade-in-up" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Back */}
       <Link
         href="/explore"
-        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-accent-cyan transition-colors"
+        className="link-cyan"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft size={16} />
         Volver a Explorar
       </Link>
 
       {/* Project header */}
-      <div className="card p-6">
-        <div className="flex items-center gap-2 mb-3 flex-wrap">
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getCategoryColor(project.category)}`}>
+      <div className="card" style={{ padding: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+          <span
+            className={getCategoryColor(project.category)}
+            style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.125rem 0.5rem', borderRadius: '9999px' }}
+          >
             {getCategoryLabel(project.category)}
           </span>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-100">{sanitizeText(project.title)}</h1>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--gray-100)' }}>{sanitizeText(project.title)}</h1>
         {project.description && (
-          <p className="text-gray-400 mt-2">{sanitizeText(project.description)}</p>
+          <p style={{ color: 'var(--gray-400)', marginTop: '0.5rem' }}>{sanitizeText(project.description)}</p>
         )}
 
         {/* Author */}
         {project.author && (
           <Link
             href={`/profile/${project.author.id}`}
-            className="inline-flex items-center gap-2 mt-4 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-accent-cyan/30 transition-all group"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.3s' }}
           >
-            <div className="w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center overflow-hidden">
+            <div style={{ width: '2rem', height: '2rem', borderRadius: '9999px', background: 'var(--dark-700)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {project.author.avatar ? (
-                <img src={`${API_URL.replace('/api', '')}${project.author.avatar}`} alt="" className="w-full h-full object-cover" />
+                <img src={`${API_URL.replace('/api', '')}${project.author.avatar}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
-                <User className="h-4 w-4 text-gray-500" />
+                <User size={16} style={{ color: 'var(--gray-500)' }} />
               )}
             </div>
-            <span className="text-sm text-gray-300 group-hover:text-accent-cyan transition-colors">
+            <span style={{ fontSize: '0.875rem', color: 'var(--gray-300)' }}>
               {project.author.name}
             </span>
           </Link>
         )}
 
-        <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-500">
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem', marginTop: '1rem', fontSize: '0.875rem', color: 'var(--gray-500)' }}>
           {project.subject && (
-            <div className="flex items-center gap-1.5">
-              <BookOpen className="h-4 w-4" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <BookOpen size={16} />
               <span>{project.subject}</span>
             </div>
           )}
           {project.semester && (
-            <div className="flex items-center gap-1.5">
-              <Tag className="h-4 w-4" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <Tag size={16} />
               <span>Semestre {project.semester}</span>
             </div>
           )}
-          <div className="flex items-center gap-1.5">
-            <Calendar className="h-4 w-4" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <Calendar size={16} />
             <span>{format(new Date(project.createdAt), "d 'de' MMMM, yyyy", { locale: es })}</span>
           </div>
         </div>
 
         {project.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginTop: '0.75rem' }}>
             {project.tags.map((tag: string) => (
-              <span key={tag} className="text-xs bg-white/5 text-gray-400 px-2 py-0.5 rounded border border-white/10">
+              <span key={tag} className="tag">
                 {tag}
               </span>
             ))}
@@ -128,8 +132,8 @@ export default function PublicProjectPage() {
       </div>
 
       {/* Files */}
-      <div className="card p-6">
-        <h2 className="text-lg font-semibold text-gray-100 mb-4">
+      <div className="card" style={{ padding: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--gray-100)', marginBottom: '1rem' }}>
           Archivos ({project.files?.length || 0})
         </h2>
         <FileList

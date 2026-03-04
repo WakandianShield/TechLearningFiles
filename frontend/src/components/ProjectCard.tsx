@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { FolderOpen, Pin, Calendar, Tag, FileIcon, Eye, EyeOff } from 'lucide-react';
-import { getCategoryColor, getCategoryLabel } from '@/lib/utils';
+import { cn, getCategoryColor, getCategoryLabel } from '@/lib/utils';
 import { sanitizeText } from '@/lib/sanitize';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import styles from './ProjectCard.module.css';
 
 interface ProjectCardProps {
   project: {
@@ -29,67 +30,67 @@ export default function ProjectCard({ project, isPublic }: ProjectCardProps) {
 
   return (
     <Link href={href}>
-      <div className="card p-5 h-full flex flex-col group hover:border-accent-cyan/30 transition-all duration-400">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <FolderOpen className="h-5 w-5 text-accent-cyan/70 group-hover:text-accent-cyan transition-colors" />
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getCategoryColor(project.category)}`}>
+      <div className={cn('card', styles.card)}>
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            <FolderOpen size={20} className={styles.folderIcon} />
+            <span className={cn(styles.badge, getCategoryColor(project.category))}>
               {getCategoryLabel(project.category)}
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className={styles.icons}>
             {project.visibility === 'PRIVATE' && (
-              <EyeOff className="h-3.5 w-3.5 text-gray-500" />
+              <EyeOff size={14} className={styles.eyeOffIcon} />
             )}
             {project.visibility === 'PUBLIC' && (
-              <Eye className="h-3.5 w-3.5 text-accent-green/70" />
+              <Eye size={14} className={styles.eyeOnIcon} />
             )}
-            {project.pinned && <Pin className="h-4 w-4 text-accent-yellow" />}
+            {project.pinned && <Pin size={16} className={styles.pinIcon} />}
           </div>
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-100 mb-1 line-clamp-2 group-hover:text-accent-cyan transition-colors">
+        <h3 className={styles.title}>
           {project.title}
         </h3>
 
         {project.description && (
-          <p className="text-sm text-gray-400 mb-3 line-clamp-2">
+          <p className={styles.description}>
             {project.description}
           </p>
         )}
 
         {isPublic && project.author && (
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-5 h-5 rounded-full bg-accent-cyan/20 flex items-center justify-center text-xs text-accent-cyan">
+          <div className={styles.author}>
+            <div className={styles.authorAvatar}>
               {project.author.name.charAt(0)}
             </div>
-            <span className="text-xs text-gray-400">{project.author.name}</span>
+            <span className={styles.authorName}>{project.author.name}</span>
           </div>
         )}
 
-        <div className="mt-auto pt-3 border-t border-white/5 space-y-1.5">
+        <div className={styles.meta}>
           {project.subject && (
-            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-              <Tag className="h-3 w-3" />
+            <div className={styles.metaRow}>
+              <Tag size={12} />
               <span>{project.subject}</span>
             </div>
           )}
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center gap-1.5">
-              <Calendar className="h-3 w-3" />
+          <div className={styles.metaSpaced}>
+            <div className={styles.metaRow}>
+              <Calendar size={12} />
               <span>{format(new Date(project.createdAt), "d MMM yyyy", { locale: es })}</span>
             </div>
             {project._count && (
-              <div className="flex items-center gap-1">
-                <FileIcon className="h-3 w-3" />
+              <div className={styles.metaRow}>
+                <FileIcon size={12} />
                 <span>{project._count.files} archivo(s)</span>
               </div>
             )}
           </div>
           {project.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 pt-1">
+            <div className={styles.tags}>
               {project.tags.slice(0, 4).map((tag) => (
-                <span key={tag} className="text-xs bg-white/5 text-gray-400 px-2 py-0.5 rounded border border-white/10">
+                <span key={tag} className={styles.tag}>
                   {tag}
                 </span>
               ))}
